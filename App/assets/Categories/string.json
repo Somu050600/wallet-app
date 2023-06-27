@@ -1,0 +1,24 @@
+{
+    "category": [
+      {
+        "name": "Credit Cards",
+        "img_url": "../assets/Categories/credit-card.png"
+      },
+      {
+        "name": "ID Cards",
+        "img_url": "../assets/Categories/id-card.png"
+      },
+      {
+        "name": "Gift Cards",
+        "img_url": "../assets/Categories/gift-card.png"
+      },
+      {
+        "name": "Loyalty Cards",
+        "img_url": "../assets/Categories/loyalty-card.png"
+      },
+      {
+        "name": "Access Cards",
+        "img_url": "../assets/Categories/access-card.png"
+      }
+    ]
+  }
