@@ -13,13 +13,30 @@ import {
   TouchableNativeFeedback,
 } from "react-native";
 
+const formatCardNumber = (number) => {
+  if (!number) {
+    return "";
+  }
+  const formattedNumber = number.replace(/\s/g, "").match(/.{1,4}/g);
+  return formattedNumber ? formattedNumber.join(" ") : "";
+};
+
 export default function CreditCard(props) {
   const [height, setHeight] = useState("");
   const [width, setWidth] = useState("");
   const [cardWidth, setCardWidth] = useState(0);
-  const [cardNumber, setCardNumber] = useState("1234 5678 9012 3456");
-  const [cvv, serCvv] = useState("748");
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardName, setCardName] = useState("");
+  const [cvv, setCvv] = useState("");
+  const [date, setDate] = useState("");
   const [viewCvv, setViewCvv] = useState("false");
+
+  useEffect(() => {
+    setCardNumber(props.cardNumber || "1234567890123456");
+    setCardName(props.cardName || "Christopher Nolan");
+    setDate(props.date || "MM/YY");
+    setCvv(props.cvv || "123");
+  }, [props.cardNumber, props.cardName, props.date, props.cvv]);
 
   useEffect(() => {
     setHeight(Dimensions.get("window").height);
@@ -55,13 +72,13 @@ export default function CreditCard(props) {
         />
       </TouchableNativeFeedback>
       <View style={styles.titles}>
-        <Text style={styles.cardNumber}>{cardNumber}</Text>
-        <Text style={styles.cardName}>Christopher Nolan</Text>
+        <Text style={styles.cardNumber}>{formatCardNumber(cardNumber)}</Text>
+        <Text style={styles.cardName}>{cardName}</Text>
       </View>
       <View style={styles.dateCvv}>
         <View style={styles.dateContainer}>
           <Text style={{ fontSize: 16, color: "white" }}>Expiry date</Text>
-          <Text style={styles.dateField}>07/30</Text>
+          <Text style={styles.dateField}>{date}</Text>
         </View>
         <View style={styles.cvvContainer}>
           <View style={{ flexDirection: "row" }}>
@@ -83,7 +100,7 @@ export default function CreditCard(props) {
           {viewCvv ? (
             <Text style={styles.cvvField}>***</Text>
           ) : (
-            <Text style={styles.cvvField}>{cvv}</Text>
+            <Text style={styles.cvvField}>{props.cvv}</Text>
           )}
         </View>
       </View>
@@ -102,13 +119,13 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     height: 205,
-    borderRadius: 18.5,
+    borderRadius: 10,
   },
   container: {
     borderColor: "#00d4ff",
-    borderWidth: 1.5,
+    // borderWidth: 1.5,
     height: 208,
-    borderRadius: 20,
+    borderRadius: 11.5,
     alignItems: "flex-start",
     justifyContent: "center",
     padding: 20,
