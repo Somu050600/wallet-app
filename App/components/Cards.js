@@ -1,17 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
 import CreditCard from "./CreditCard";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Cards() {
   const [height, setHeight] = useState("");
   const [width, setWidth] = useState("");
   const [cardWidth, setCardWidth] = useState(0);
+  const [cards, setCards] = useState([]);
+
+  const findCards = async () => {
+    const result = await AsyncStorage.getItem("cards");
+    console.log(result);
+    if (result !== null) {
+      setCards(JSON.parse(result));
+      console.log("result saved");
+    }
+  };
 
   useEffect(() => {
     setHeight(Dimensions.get("window").height);
-    const width = Dimensions.get("window").width;
-    setWidth(width);
+    setWidth(Dimensions.get("window").width);
     setCardWidth(width * 0.99);
+    findCards();
   }, []);
 
   return (
@@ -24,13 +35,24 @@ export default function Cards() {
         snapToInterval={cardWidth - 22}
       >
         <View style={styles.creditCardContainer}>
+          {cards.map((card) => {
+            return (
+              <CreditCard
+                key={card.id}
+                cardNumber={card.cardNumber}
+                cardName={card.nameOnCard}
+                date={card.date}
+                cvv={card.cvv}
+              />
+            );
+          })}
+          {/* <CreditCard />
           <CreditCard />
           <CreditCard />
           <CreditCard />
           <CreditCard />
           <CreditCard />
-          <CreditCard />
-          <CreditCard />
+          <CreditCard /> */}
         </View>
       </ScrollView>
     </View>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "expo-router";
 import {
   StyleSheet,
   Text,
@@ -11,11 +10,8 @@ import {
   Animated,
 } from "react-native";
 import AddIcon from "../assets/Navbar/add.png";
-import { useNavigation } from "@react-navigation/native";
 
-export default function Navbar() {
-  const navigation = useNavigation();
-
+export default function Navbar({ navigation }) {
   const [height, setHeight] = useState("0");
   const [width, setWidth] = useState("0");
   const [rotate, setRotate] = useState(new Animated.Value(0));
@@ -99,14 +95,12 @@ export default function Navbar() {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    alignSelf: "center",
-    bottom: "-250%",
+    bottom: 0,
     backgroundColor: "#f1f1f1",
-    height: 2000,
-    width: 2000,
+    height: 100,
+    width: "100%",
     alignItems: "flex-start",
     justifyContent: "center",
-    borderRadius: 1000,
   },
   imgicon: {
     width: 70,
@@ -117,12 +111,10 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     top: 0,
     flexDirection: "row",
-    height: "5%",
-    // borderColor: "black",
-    // borderWidth: 1,
-    alignItems: "flex-start",
+    height: "100%",
+    width: "100%",
+    alignItems: "center",
     justifyContent: "center",
-    paddingTop: 10,
   },
   menu: {
     position: "absolute",

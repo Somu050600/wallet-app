@@ -26,17 +26,17 @@ export default function CreditCard(props) {
   const [width, setWidth] = useState("");
   const [cardWidth, setCardWidth] = useState(0);
   const [cardNumber, setCardNumber] = useState("");
-  const [cardName, setCardName] = useState("");
+  const [nameOnCard, setNameOnCard] = useState("");
   const [cvv, setCvv] = useState("");
   const [date, setDate] = useState("");
   const [viewCvv, setViewCvv] = useState("false");
 
   useEffect(() => {
     setCardNumber(props.cardNumber || "1234567890123456");
-    setCardName(props.cardName || "Christopher Nolan");
+    setNameOnCard(props.nameOnCard || "Christopher Nolan");
     setDate(props.date || "MM/YY");
     setCvv(props.cvv || "123");
-  }, [props.cardNumber, props.cardName, props.date, props.cvv]);
+  }, [props.cardNumber, props.nameOnCard, props.date, props.cvv]);
 
   useEffect(() => {
     setHeight(Dimensions.get("window").height);
@@ -73,7 +73,7 @@ export default function CreditCard(props) {
       </TouchableNativeFeedback>
       <View style={styles.titles}>
         <Text style={styles.cardNumber}>{formatCardNumber(cardNumber)}</Text>
-        <Text style={styles.cardName}>{cardName}</Text>
+        <Text style={styles.cardName}>{nameOnCard}</Text>
       </View>
       <View style={styles.dateCvv}>
         <View style={styles.dateContainer}>

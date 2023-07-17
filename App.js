@@ -19,17 +19,24 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="Home"
-          screenOptions={{
+          screenOptions={({ route, navigation }) => ({
             headerShown: false,
             gestureEnabled: true,
             cardOverlayEnabled: true,
             headerStatusBarHeight: 5000,
-            ...TransitionPresets.ModalPresentationIOS,
-          }}
+            ...TransitionPresets.ModalTransition,
+          })}
         >
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="CCInput" component={CCInputScreen} />
+          <Stack.Screen
+            name="CCInput"
+            component={CCInputScreen}
+            options={{
+              title: "CCInput",
+              ...TransitionPresets.RevealFromBottomAndroid,
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

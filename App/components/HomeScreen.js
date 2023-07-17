@@ -44,7 +44,7 @@ export default function HomeScreen({ navigation }) {
         <Cards />
         <Categories />
       </ScrollView>
-      <Navbar />
+      <Navbar navigation={navigation} />
     </SafeAreaView>
   );
 }
