@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
 import CreditCard from "./CreditCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Cards() {
+export default function Cards(props) {
   const [height, setHeight] = useState("");
   const [width, setWidth] = useState("");
   const [cardWidth, setCardWidth] = useState(0);
@@ -11,19 +11,23 @@ export default function Cards() {
 
   const findCards = async () => {
     const result = await AsyncStorage.getItem("cards");
-    console.log(result);
+    // console.log(result);
     if (result !== null) {
       setCards(JSON.parse(result));
-      console.log("result saved");
+      // console.log("fetched Cards");
+    } else {
+      console.log("failed to fetch cards");
     }
   };
 
   useEffect(() => {
     setHeight(Dimensions.get("window").height);
     setWidth(Dimensions.get("window").width);
-    setCardWidth(width * 0.99);
-    findCards();
+    setCardWidth(width * 0.9);
   }, []);
+  useEffect(() => {
+    findCards();
+  }, [props.cards]);
 
   return (
     <View>
@@ -31,8 +35,8 @@ export default function Cards() {
       <ScrollView
         horizontal={true}
         decelerationRate="fast"
-        snapToAlignment="center"
-        snapToInterval={cardWidth - 22}
+        snapToAlignment="start"
+        snapToInterval={cardWidth + 10}
       >
         <View style={styles.creditCardContainer}>
           {cards.map((card) => {
@@ -40,19 +44,12 @@ export default function Cards() {
               <CreditCard
                 key={card.id}
                 cardNumber={card.cardNumber}
-                cardName={card.nameOnCard}
+                nameOnCard={card.nameOnCard}
                 date={card.date}
                 cvv={card.cvv}
               />
             );
           })}
-          {/* <CreditCard />
-          <CreditCard />
-          <CreditCard />
-          <CreditCard />
-          <CreditCard />
-          <CreditCard />
-          <CreditCard /> */}
         </View>
       </ScrollView>
     </View>

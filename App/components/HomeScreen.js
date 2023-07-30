@@ -13,11 +13,15 @@ import Header from "./Header";
 import Navbar from "./Navbar";
 import Cards from "./Cards";
 import Categories from "./Categories";
+import { useRoute } from "@react-navigation/native";
 
 export default function HomeScreen({ navigation }) {
   const [height, setHeight] = useState("");
   const [width, setWidth] = useState("");
   const [refreshing, setRefreshing] = React.useState(false);
+
+  const route = useRoute();
+  const cards = route.params?.cards;
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -41,7 +45,7 @@ export default function HomeScreen({ navigation }) {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <Cards />
+        <Cards cards={cards} />
         <Categories />
       </ScrollView>
       <Navbar navigation={navigation} />
