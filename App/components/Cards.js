@@ -23,38 +23,64 @@ export default function Cards(props) {
   useEffect(() => {
     setHeight(Dimensions.get("window").height);
     setWidth(Dimensions.get("window").width);
-    setCardWidth(width * 0.9);
   }, []);
   useEffect(() => {
     findCards();
   }, [props.cards]);
 
+  useEffect(() => {
+    setCardWidth(width * 0.9);
+  }, [width]);
+
+  const handleCardPress = (id, cardNumber, nameOnCard, date, cvv) => {
+    props.navigation.navigate("CCInput", {
+      id: id,
+      cardNumber: cardNumber,
+      nameOnCard: nameOnCard,
+      date: date,
+      cvv: cvv,
+    });
+    console.log("Card with ID:", id, "is pressed.");
+  };
+
   return (
     <View>
       <Text style={styles.cardTitle}>CARDS</Text>
-      <ScrollView
-        horizontal={true}
-        decelerationRate="fast"
-        snapToAlignment="start"
-        snapToInterval={cardWidth + 10}
-      >
-        <View style={styles.creditCardContainer}>
-          {cards.map((card) => {
-            return (
+      {cards.length > 0 ? (
+        <ScrollView
+          horizontal={true}
+          decelerationRate="fast"
+          snapToAlignment="start"
+          snapToInterval={cardWidth + 10}
+        >
+          <View style={styles.creditCardContainer}>
+            {cards.map((card) => (
               <CreditCard
                 key={card.id}
                 cardNumber={card.cardNumber}
                 nameOnCard={card.nameOnCard}
                 date={card.date}
                 cvv={card.cvv}
+                onPress={() =>
+                  handleCardPress(
+                    card.id,
+                    card.cardNumber,
+                    card.nameOnCard,
+                    card.date,
+                    card.cvv
+                  )
+                }
               />
-            );
-          })}
-        </View>
-      </ScrollView>
+            ))}
+          </View>
+        </ScrollView>
+      ) : (
+        <Text style={styles.noCardsText}>No cards found.</Text>
+      )}
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 16,
@@ -68,5 +94,11 @@ const styles = StyleSheet.create({
   creditCardContainer: {
     flexDirection: "row",
     paddingHorizontal: 5,
+  },
+  noCardsText: {
+    textAlign: "center",
+    marginTop: 10,
+    fontSize: 16,
+    color: "gray",
   },
 });

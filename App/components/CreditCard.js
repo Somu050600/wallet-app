@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Clipboard from "expo-clipboard";
+import { useTheme } from "react-native-paper";
 
 import {
   StyleSheet,
@@ -10,7 +11,7 @@ import {
   ImageBackground,
   SafeAreaView,
   Dimensions,
-  TouchableNativeFeedback,
+  TouchableOpacity,
 } from "react-native";
 
 const formatCardNumber = (number) => {
@@ -24,12 +25,14 @@ const formatCardNumber = (number) => {
 export default function CreditCard(props) {
   const [height, setHeight] = useState("");
   const [width, setWidth] = useState("");
-  const [cardWidth, setCardWidth] = useState(0);
+  var [cardWidth, setCardWidth] = useState(0);
   const [cardNumber, setCardNumber] = useState("");
   const [nameOnCard, setNameOnCard] = useState("");
   const [cvv, setCvv] = useState("");
   const [date, setDate] = useState("");
   const [viewCvv, setViewCvv] = useState("false");
+
+  const theme = useTheme();
 
   useEffect(() => {
     setCardNumber(props.cardNumber || "1234567890123456");
@@ -54,23 +57,27 @@ export default function CreditCard(props) {
   };
 
   return (
-    <View style={[styles.container, { width: cardWidth }]}>
-      <LinearGradient
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={props.onPress}
+      style={[styles.container, { width: cardWidth }]}
+    >
+      {/* <LinearGradient
         colors={["#0000ff", "#00d4ff"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         style={styles.background}
-      />
+      /> */}
       <Image
         source={require("../assets/creditCard/nfc.png")}
         style={styles.nfc}
       />
-      <TouchableNativeFeedback onPress={copyToClipboard}>
+      <TouchableOpacity onPress={copyToClipboard}>
         <Image
           source={require("../assets/creditCard/copy.png")}
-          style={styles.copy}
+          style={[styles.copy, { left: cardWidth - 60 }]}
         />
-      </TouchableNativeFeedback>
+      </TouchableOpacity>
       <View style={styles.titles}>
         <Text style={styles.cardNumber}>{formatCardNumber(cardNumber)}</Text>
         <Text style={styles.cardName}>{nameOnCard}</Text>
@@ -83,7 +90,7 @@ export default function CreditCard(props) {
         <View style={styles.cvvContainer}>
           <View style={{ flexDirection: "row" }}>
             <Text style={{ fontSize: 16, color: "white" }}>CVV</Text>
-            <TouchableNativeFeedback onPress={handleViewCvv}>
+            <TouchableOpacity onPress={handleViewCvv}>
               {viewCvv ? (
                 <Image
                   source={require("../assets/creditCard/unhide.png")}
@@ -95,7 +102,7 @@ export default function CreditCard(props) {
                   style={styles.hide}
                 />
               )}
-            </TouchableNativeFeedback>
+            </TouchableOpacity>
           </View>
           {viewCvv ? (
             <Text style={styles.cvvField}>***</Text>
@@ -108,7 +115,7 @@ export default function CreditCard(props) {
         source={require("../assets/creditCard/visa_icon.png")}
         style={styles.cardType}
       />
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -122,6 +129,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   container: {
+    position: "relative",
     borderColor: "#00d4ff",
     // borderWidth: 1.5,
     height: 208,
@@ -154,9 +162,10 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     position: "absolute",
-    top: 20,
-    right: 20,
+    top: -85,
+    // left: "cardWidth",
     tintColor: "white",
+    zIndex: 999,
   },
   cvvField: {
     fontSize: 24,

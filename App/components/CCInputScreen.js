@@ -12,9 +12,11 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState, useRef } from "react";
+import { useRoute } from "@react-navigation/native";
 import CreditCard from "./CreditCard";
 import BackIcon from "./BackIcon";
 import DeleteIcon from "./DeleteIcon";
+import BottomMessage from "./BottomMessage";
 
 export default function CCInputScreen({ navigation }) {
   const [cardDetails, setCardDetails] = useState([]);
@@ -22,6 +24,8 @@ export default function CCInputScreen({ navigation }) {
   const [nameOnCard, setNameOnCard] = useState("");
   const [date, setDate] = useState("");
   const [cvv, setCvv] = useState("");
+  const [cardId, setCardId] = useState("");
+  const [showMessage, setShowMessage] = useState(false);
 
   const inputRefs = useRef([]);
   const inputConfigs = [
@@ -30,6 +34,16 @@ export default function CCInputScreen({ navigation }) {
     { maxLength: 7 },
     { maxLength: 4 },
   ];
+
+  const route = useRoute();
+
+  useEffect(() => {
+    setCardId(route.params?.id || null);
+    setCardNumber(route.params?.cardNumber || "");
+    setNameOnCard(route.params?.nameOnCard || "");
+    setDate(route.params?.date || "");
+    setCvv(route.params?.cvv || "");
+  }, [route.params?.id]);
 
   const handleTextChange = (text, index) => {
     if (
@@ -48,9 +62,7 @@ export default function CCInputScreen({ navigation }) {
     const numericValue = text.replace(/[^0-9]/g, "");
     const limitedValue = numericValue.slice(0, 4);
     const currentYear = new Date().getFullYear().toString().slice(-2);
-
     let formattedValue = limitedValue;
-
     // Check if MM is between 01 and 12
     if (limitedValue.length > 2) {
       const month = parseInt(limitedValue.slice(0, 2));
@@ -63,7 +75,6 @@ export default function CCInputScreen({ navigation }) {
           limitedValue.slice(0, 2) + " / " + limitedValue.slice(2);
       }
     }
-
     // Check if YY is greater than the current year
     if (limitedValue.length === 4) {
       const year = parseInt(limitedValue.slice(2));
@@ -71,8 +82,23 @@ export default function CCInputScreen({ navigation }) {
         formattedValue = formattedValue.slice(0, 5) + currentYear;
       }
     }
-
     setDate(formattedValue);
+  };
+
+  const updateCard = async (cardId, updatedCardData) => {
+    const updatedCardDetails = cardDetails.map((card) =>
+      card.id === cardId ? { ...card, ...updatedCardData } : card
+    );
+    setCardDetails(updatedCardDetails);
+    try {
+      await AsyncStorage.setItem("cards", JSON.stringify(updatedCardDetails));
+      console.log("Card details updated in AsyncStorage.");
+      setTimeout(async () => {
+        await navigation.navigate("Home", { cards: updatedCardDetails });
+      }, 1000);
+    } catch (error) {
+      console.log("Error updating card details in AsyncStorage:", error);
+    }
   };
 
   const findCards = async () => {
@@ -89,19 +115,6 @@ export default function CCInputScreen({ navigation }) {
   useEffect(() => {
     findCards();
   }, []);
-
-  useEffect(() => {
-    if (inputRefs.current.length > 0) {
-      const lastInputRef = inputRefs.current[inputRefs.current.length - 1];
-      if (lastInputRef) {
-        lastInputRef.focus();
-      }
-    }
-  }, [inputRefs]);
-
-  useEffect(() => {
-    // console.log("Card details updated:", cardDetails);
-  }, [cardDetails]);
 
   const handleSave = async () => {
     if (cardNumber && nameOnCard && date && cvv) {
@@ -125,6 +138,18 @@ export default function CCInputScreen({ navigation }) {
   };
   const handleCancel = () => {
     navigation.navigate("Home");
+  };
+  const handleUpdate = () => {
+    const cardIdToUpdate = cardId;
+    const updatedCardData = {
+      cardNumber: cardNumber,
+      nameOnCard: nameOnCard,
+      date: date,
+      cvv: cvv,
+    };
+    updateCard(cardIdToUpdate, updatedCardData);
+    setShowMessage(true);
+    setTimeout(() => setShowMessage(false), 2000);
   };
   const handleDelete = async (id) => {
     Alert.alert(
@@ -173,7 +198,7 @@ export default function CCInputScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.containerHeader}>
         <BackIcon onPress={handleCancel} />
-        <DeleteIcon onPress={() => handleDelete("6234568243276322")} />
+        {cardId ? <DeleteIcon onPress={() => handleDelete(cardId)} /> : ""}
       </View>
       <ScrollView>
         <KeyboardAvoidingView
@@ -185,7 +210,7 @@ export default function CCInputScreen({ navigation }) {
         >
           <CreditCard
             cardNumber={cardNumber}
-            cardName={nameOnCard}
+            nameOnCard={nameOnCard}
             date={date}
             cvv={cvv}
             style={styles.creditCard}
@@ -199,6 +224,7 @@ export default function CCInputScreen({ navigation }) {
                 handleInputChange(text);
                 handleTextChange(text, 0);
               }}
+              ref={(ref) => (inputRefs.current[0] = ref)}
               keyboardType="numeric"
               placeholder="_ _ _ _    _ _ _ _    _ _ _ _    _ _ _ _"
               placeholderTextColor="#bdbdbd"
@@ -214,9 +240,10 @@ export default function CCInputScreen({ navigation }) {
                 setNameOnCard(text);
                 handleTextChange(text, 1);
               }}
+              ref={(ref) => (inputRefs.current[1] = ref)}
               placeholder="card holder name"
               placeholderTextColor="#bdbdbd"
-              maxLength={inputConfigs[1].maxLength}
+              maxLength={21}
             />
           </View>
           <View
@@ -234,10 +261,11 @@ export default function CCInputScreen({ navigation }) {
                   handleExpiryDate(text);
                   handleTextChange(text, 2);
                 }}
+                ref={(ref) => (inputRefs.current[2] = ref)}
                 placeholder="MM / YY"
                 placeholderTextColor="gray"
                 keyboardType="numeric"
-                maxLength={inputConfigs[2].maxLength}
+                maxLength={7}
               />
             </View>
             <View>
@@ -252,10 +280,11 @@ export default function CCInputScreen({ navigation }) {
                   setCvv(text);
                   handleTextChange(text, 3);
                 }}
+                ref={(ref) => (inputRefs.current[3] = ref)}
                 placeholder="123"
                 placeholderTextColor="gray"
                 keyboardType="numeric"
-                maxLength={inputConfigs[3].maxLength}
+                maxLength={4}
               />
             </View>
           </View>
@@ -264,11 +293,23 @@ export default function CCInputScreen({ navigation }) {
           <Pressable style={styles.button1} onPress={() => handleCancel()}>
             <Text style={styles.btn_text}>Cancel</Text>
           </Pressable>
-          <Pressable style={styles.button2} onPress={() => handleSave()}>
-            <Text style={styles.btn_text}>Save</Text>
-          </Pressable>
+          {cardId ? (
+            <Pressable style={styles.button2} onPress={() => handleUpdate()}>
+              <Text style={styles.btn_text}>Update</Text>
+            </Pressable>
+          ) : (
+            <Pressable
+              style={styles.button2}
+              onPress={() => handleSave(cardId)}
+            >
+              <Text style={styles.btn_text}>Save</Text>
+            </Pressable>
+          )}
         </View>
       </ScrollView>
+      {showMessage && (
+        <BottomMessage message={"Card Updated!😎"} style={styles.bottom_msg} />
+      )}
     </SafeAreaView>
   );
 }
@@ -312,6 +353,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFF",
     paddingTop: 50,
+  },
+  bottom_msg: {
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 100,
   },
   containerHeader: {
     width: "100%",

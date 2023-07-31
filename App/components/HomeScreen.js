@@ -45,7 +45,7 @@ export default function HomeScreen({ navigation }) {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <Cards cards={cards} />
+        <Cards cards={cards} navigation={navigation} />
         <Categories />
       </ScrollView>
       <Navbar navigation={navigation} />
