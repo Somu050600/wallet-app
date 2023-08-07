@@ -4,12 +4,13 @@ import {
   View,
   ScrollView,
   SafeAreaView,
-  TextInput,
+  // TextInput,
   KeyboardAvoidingView,
   Button,
   Pressable,
   Alert,
 } from "react-native";
+import { TextInput } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState, useRef } from "react";
 import { useRoute } from "@react-navigation/native";
@@ -17,6 +18,7 @@ import CreditCard from "./CreditCard";
 import BackIcon from "./BackIcon";
 import DeleteIcon from "./DeleteIcon";
 import BottomMessage from "./BottomMessage";
+import { useTheme } from "react-native-paper";
 
 export default function CCInputScreen({ navigation }) {
   const [cardDetails, setCardDetails] = useState([]);
@@ -35,6 +37,7 @@ export default function CCInputScreen({ navigation }) {
     { maxLength: 4 },
   ];
 
+  const theme = useTheme();
   const route = useRoute();
 
   useEffect(() => {
@@ -95,7 +98,7 @@ export default function CCInputScreen({ navigation }) {
       console.log("Card details updated in AsyncStorage.");
       setTimeout(async () => {
         await navigation.navigate("Home", { cards: updatedCardDetails });
-      }, 1000);
+      }, 500);
     } catch (error) {
       console.log("Error updating card details in AsyncStorage:", error);
     }
@@ -178,6 +181,7 @@ export default function CCInputScreen({ navigation }) {
                   );
                   setCardDetails(cardsArray);
                   alert("Card deleted successfully!");
+                  navigation.navigate("Home", { cards: cardsArray });
                 } else {
                   alert("Card not found with the specified ID.");
                 }
@@ -195,7 +199,9 @@ export default function CCInputScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       <View style={styles.containerHeader}>
         <BackIcon onPress={handleCancel} />
         {cardId ? <DeleteIcon onPress={() => handleDelete(cardId)} /> : ""}
@@ -208,17 +214,19 @@ export default function CCInputScreen({ navigation }) {
           behavior={Platform.OS === "ios" ? "padding" : null}
           keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} // Adjust the offset value as needed
         >
-          <CreditCard
-            cardNumber={cardNumber}
-            nameOnCard={nameOnCard}
-            date={date}
-            cvv={cvv}
-            style={styles.creditCard}
-          />
+          <View style={styles.creditCard}>
+            <CreditCard
+              cardNumber={cardNumber}
+              nameOnCard={nameOnCard}
+              date={date}
+              cvv={cvv}
+            />
+          </View>
+
           <View style={styles.div}>
-            <Text style={styles.input_title}>CARD NUMBER</Text>
             <TextInput
-              style={styles.textInput}
+              label={"Card Number"}
+              mode="outlined"
               value={cardNumber}
               onChangeText={(text) => {
                 handleInputChange(text);
@@ -227,14 +235,14 @@ export default function CCInputScreen({ navigation }) {
               ref={(ref) => (inputRefs.current[0] = ref)}
               keyboardType="numeric"
               placeholder="_ _ _ _    _ _ _ _    _ _ _ _    _ _ _ _"
-              placeholderTextColor="#bdbdbd"
               maxLength={inputConfigs[0].maxLength}
+              right={<TextInput.Affix text={cardNumber.length + "/16"} />}
             />
           </View>
           <View style={styles.div}>
-            <Text style={styles.input_title}>YOUR NAME</Text>
             <TextInput
-              style={styles.textInput}
+              label={"Name on Card"}
+              mode="outlined"
               value={nameOnCard}
               onChangeText={(text) => {
                 setNameOnCard(text);
@@ -242,8 +250,8 @@ export default function CCInputScreen({ navigation }) {
               }}
               ref={(ref) => (inputRefs.current[1] = ref)}
               placeholder="card holder name"
-              placeholderTextColor="#bdbdbd"
               maxLength={21}
+              right={<TextInput.Affix text={nameOnCard.length + "/21"} />}
             />
           </View>
           <View
@@ -253,9 +261,10 @@ export default function CCInputScreen({ navigation }) {
             ]}
           >
             <View>
-              <Text style={styles.input_title}>EXPIRY DATE</Text>
               <TextInput
-                style={styles.textInput}
+                label={"Expiry Date"}
+                mode="outlined"
+                style={[styles.textInput, { width: 120, alignSelf: "center" }]}
                 value={date}
                 onChangeText={(text) => {
                   handleExpiryDate(text);
@@ -269,11 +278,15 @@ export default function CCInputScreen({ navigation }) {
               />
             </View>
             <View>
-              <Text style={styles.input_title}>CVV</Text>
               <TextInput
+                label={"CVV"}
+                mode="outlined"
                 style={[
                   styles.textInput,
-                  { width: "150%", alignSelf: "center" },
+                  {
+                    width: 120,
+                    alignSelf: "center",
+                  },
                 ]}
                 value={cvv}
                 onChangeText={(text) => {
@@ -282,7 +295,7 @@ export default function CCInputScreen({ navigation }) {
                 }}
                 ref={(ref) => (inputRefs.current[3] = ref)}
                 placeholder="123"
-                placeholderTextColor="gray"
+                placeholderTextColor="black"
                 keyboardType="numeric"
                 maxLength={4}
               />
@@ -359,6 +372,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     zIndex: 100,
   },
+  creditCard: {
+    marginBottom: 25,
+  },
   containerHeader: {
     width: "100%",
     paddingHorizontal: 20,
@@ -372,7 +388,7 @@ const styles = StyleSheet.create({
   },
   flex: {
     flex: 1,
-    paddingTop: 0,
+    paddingTop: 10,
   },
   input_title: {
     fontSize: 12,
@@ -386,13 +402,13 @@ const styles = StyleSheet.create({
   scrollView: {
     position: "absolute",
   },
-  textInput: {
-    width: "100%",
-    borderWidth: 1,
-    borderColor: "#115599",
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 5,
-    fontSize: 20,
-  },
+  // textInput: {
+  //   width: "100%",
+  //   // borderWidth: 1,
+  //   borderColor: "#115599",
+  //   padding: 10,
+  //   borderRadius: 5,
+  //   marginTop: 5,
+  //   fontSize: 20,
+  // },
 });

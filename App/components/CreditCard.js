@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { LinearGradient } from "expo-linear-gradient";
 import * as Clipboard from "expo-clipboard";
-import { useTheme } from "react-native-paper";
-
+import { useTheme, IconButton } from "react-native-paper";
 import {
   StyleSheet,
   Text,
   View,
   Image,
-  ImageBackground,
-  SafeAreaView,
   Dimensions,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 
 const formatCardNumber = (number) => {
@@ -23,29 +20,61 @@ const formatCardNumber = (number) => {
 };
 
 export default function CreditCard(props) {
-  const [height, setHeight] = useState("");
-  const [width, setWidth] = useState("");
   var [cardWidth, setCardWidth] = useState(0);
   const [cardNumber, setCardNumber] = useState("");
   const [nameOnCard, setNameOnCard] = useState("");
   const [cvv, setCvv] = useState("");
   const [date, setDate] = useState("");
   const [viewCvv, setViewCvv] = useState("false");
+  const [cardType, setCardType] = useState("VISA");
 
   const theme = useTheme();
+  const dimensions = useWindowDimensions();
+
+  const cardTypeOptions = {
+    VISA: require("../assets/creditCard/visa_icon.png"),
+    AMEX: require("../assets/creditCard/amex_icon.png"),
+    MASTER: require("../assets/creditCard/mastercard_icon.png"),
+    RUPAY: require("../assets/creditCard/rupay_icon.png"),
+  };
+
+  function getCardType(number) {
+    const numberFormated = number.replace(/\D/g, "");
+
+    if (numberFormated.length < 4) {
+      return undefined; // Cannot determine card type yet
+    }
+
+    if (/^4/.test(numberFormated)) {
+      return "VISA";
+    } else if (/^3/.test(numberFormated)) {
+      return "AMEX";
+    } else {
+      var patterns = {
+        MASTER: /^5[1-5][0-9]{14}$/,
+        RUPAY: /^(508[5-9][0-9]{10})|(6069[8-9][0-9]{10})|(607[0-8][0-9]{10})$/,
+      };
+      for (var key in patterns) {
+        if (patterns[key].test(numberFormated)) {
+          return key;
+        }
+      }
+    }
+    return "VISA"; // Default to Visa if none of the conditions match
+  }
 
   useEffect(() => {
     setCardNumber(props.cardNumber || "1234567890123456");
     setNameOnCard(props.nameOnCard || "Christopher Nolan");
     setDate(props.date || "MM/YY");
     setCvv(props.cvv || "123");
+    setCardType(getCardType(props.cardNumber));
   }, [props.cardNumber, props.nameOnCard, props.date, props.cvv]);
 
+  console.log(cardType);
+
   useEffect(() => {
-    setHeight(Dimensions.get("window").height);
-    const width = Dimensions.get("window").width;
-    setWidth(width);
-    setCardWidth(width * 0.9);
+    setCardWidth(dimensions.width * 0.9);
   }, []);
 
   const copyToClipboard = async () => {
@@ -60,61 +89,119 @@ export default function CreditCard(props) {
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={props.onPress}
-      style={[styles.container, { width: cardWidth }]}
+      style={[
+        styles.container,
+        {
+          width: cardWidth,
+          backgroundColor: theme.colors.primaryContainer,
+          borderColor: theme.colors.onPrimaryContainer,
+          overflow: "hidden",
+          shadowColor: theme.colors.onPrimaryContainer,
+        },
+      ]}
     >
-      {/* <LinearGradient
-        colors={["#0000ff", "#00d4ff"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        style={styles.background}
-      /> */}
       <Image
         source={require("../assets/creditCard/nfc.png")}
-        style={styles.nfc}
+        style={[styles.nfc, { tintColor: theme.colors.onPrimaryContainer }]}
       />
-      <TouchableOpacity onPress={copyToClipboard}>
+      <TouchableOpacity
+        onPress={() => copyToClipboard()}
+        style={{
+          position: "absolute",
+          width: 30,
+          height: 30,
+          right: 10,
+          top: 20,
+        }}
+      >
         <Image
           source={require("../assets/creditCard/copy.png")}
-          style={[styles.copy, { left: cardWidth - 60 }]}
+          style={[
+            styles.copy,
+            {
+              tintColor: theme.colors.onPrimaryContainer,
+            },
+          ]}
         />
       </TouchableOpacity>
       <View style={styles.titles}>
-        <Text style={styles.cardNumber}>{formatCardNumber(cardNumber)}</Text>
-        <Text style={styles.cardName}>{nameOnCard}</Text>
+        <Text
+          style={[
+            styles.cardNumber,
+            { color: theme.colors.onPrimaryContainer },
+          ]}
+        >
+          {formatCardNumber(cardNumber)}
+        </Text>
+        <Text
+          style={[styles.cardName, { color: theme.colors.onPrimaryContainer }]}
+        >
+          {nameOnCard}
+        </Text>
       </View>
       <View style={styles.dateCvv}>
         <View style={styles.dateContainer}>
-          <Text style={{ fontSize: 16, color: "white" }}>Expiry date</Text>
-          <Text style={styles.dateField}>{date}</Text>
+          <Text
+            style={{ fontSize: 16, color: theme.colors.onPrimaryContainer }}
+          >
+            Expiry date
+          </Text>
+          <Text
+            style={[
+              styles.dateField,
+              { color: theme.colors.onPrimaryContainer },
+            ]}
+          >
+            {date}
+          </Text>
         </View>
         <View style={styles.cvvContainer}>
           <View style={{ flexDirection: "row" }}>
-            <Text style={{ fontSize: 16, color: "white" }}>CVV</Text>
-            <TouchableOpacity onPress={handleViewCvv}>
-              {viewCvv ? (
-                <Image
-                  source={require("../assets/creditCard/unhide.png")}
-                  style={styles.hide}
-                />
-              ) : (
-                <Image
-                  source={require("../assets/creditCard/hide.png")}
-                  style={styles.hide}
-                />
-              )}
-            </TouchableOpacity>
+            <Text
+              style={{ fontSize: 16, color: theme.colors.onPrimaryContainer }}
+            >
+              CVV
+            </Text>
+            {viewCvv ? (
+              <IconButton
+                icon="eye-off-outline"
+                iconColor={theme.colors.onPrimaryContainer}
+                size={20}
+                style={styles.hide}
+                onPress={handleViewCvv}
+              />
+            ) : (
+              <IconButton
+                icon="eye"
+                iconColor={theme.colors.onPrimaryContainer}
+                size={20}
+                style={styles.hide}
+                onPress={handleViewCvv}
+              />
+            )}
           </View>
           {viewCvv ? (
-            <Text style={styles.cvvField}>***</Text>
+            <Text
+              style={[
+                styles.cvvField,
+                { color: theme.colors.onPrimaryContainer },
+              ]}
+            >
+              ***
+            </Text>
           ) : (
-            <Text style={styles.cvvField}>{props.cvv}</Text>
+            <Text
+              style={[
+                styles.cvvField,
+                { color: theme.colors.onPrimaryContainer },
+              ]}
+            >
+              {cvv}
+            </Text>
           )}
         </View>
       </View>
-      <Image
-        source={require("../assets/creditCard/visa_icon.png")}
-        style={styles.cardType}
-      />
+      <Image source={cardTypeOptions[cardType]} style={styles.cardType} />
     </TouchableOpacity>
   );
 }
@@ -130,14 +217,19 @@ const styles = StyleSheet.create({
   },
   container: {
     position: "relative",
-    borderColor: "#00d4ff",
-    // borderWidth: 1.5,
+    // borderWidth: 0.5,
     height: 208,
-    borderRadius: 11.5,
+    borderRadius: 20,
     alignItems: "flex-start",
     justifyContent: "center",
     padding: 20,
-    margin: 5,
+    marginHorizontal: 5,
+    marginVertical: 10,
+    elevation: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
+    // opacity: 0.5,
+    // blurRadius: 100,
   },
   cardNumber: {
     fontSize: 26,
@@ -161,10 +253,6 @@ const styles = StyleSheet.create({
   copy: {
     width: 24,
     height: 24,
-    position: "absolute",
-    top: -85,
-    // left: "cardWidth",
-    tintColor: "white",
     zIndex: 999,
   },
   cvvField: {
@@ -190,6 +278,7 @@ const styles = StyleSheet.create({
   hide: {
     width: 20,
     height: 20,
+    margin: 0,
     marginLeft: 10,
     tintColor: "white",
   },

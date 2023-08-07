@@ -1,40 +1,61 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Category from "./Category";
+import { useState } from "react";
 
 export default function Categories() {
-  const categoryJson = {
-    category: [
-      {
-        name: "Credit Cards",
-        img_url: require("../assets/Categories/credit-card.png"),
-      },
-      {
-        name: "ID Cards",
-        img_url: require("../assets/Categories/id-card.png"),
-      },
-      {
-        name: "Gift Cards",
-        img_url: require("../assets/Categories/gift-card.png"),
-      },
-      {
-        name: "Loyalty Cards",
-        img_url: require("../assets/Categories/loyalty-card.png"),
-      },
-      {
-        name: "Access Cards",
-        img_url: require("../assets/Categories/access-card.png"),
-      },
-    ],
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [category, setCategory] = useState([
+    {
+      name: "Credit Cards",
+      img_url: require("../assets/Categories/credit-card.png"),
+    },
+    {
+      name: "ID Cards",
+      img_url: require("../assets/Categories/id-card.png"),
+    },
+    {
+      name: "Gift Cards",
+      img_url: require("../assets/Categories/gift-card.png"),
+    },
+    {
+      name: "Loyalty Cards",
+      img_url: require("../assets/Categories/loyalty-card.png"),
+    },
+    {
+      name: "Access Cards",
+      img_url: require("../assets/Categories/access-card.png"),
+    },
+  ]);
+
+  const handleCategoryClick = (index) => {
+    setActiveIndex(index);
   };
+
   return (
     <ScrollView
       style={styles.Container}
       horizontal={true}
       showsHorizontalScrollIndicator={false}
     >
-      {categoryJson.category.map((item, index) => {
+      {category.map((item, index) => {
         return (
-          <Category name={item.name} img_url={item.img_url} key={item.name} />
+          <TouchableOpacity
+            key={item.name}
+            onPress={() => handleCategoryClick(index)}
+          >
+            <Category
+              name={item.name}
+              img_url={item.img_url}
+              index={index}
+              activeIndex={activeIndex}
+            />
+          </TouchableOpacity>
         );
       })}
     </ScrollView>

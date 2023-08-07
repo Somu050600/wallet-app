@@ -1,11 +1,25 @@
 import { StyleSheet, Text, View, Image } from "react-native";
+import { useTheme } from "react-native-paper";
 
 export default function Category(props) {
+  const theme = useTheme();
   return (
     <View style={styles.Container}>
-      <View style={styles.imageBg} />
+      <View
+        style={[
+          styles.imageBg,
+          {
+            backgroundColor:
+              props.index === props.activeIndex
+                ? theme.colors.primary
+                : theme.colors.primaryContainer,
+          },
+        ]}
+      />
       <Image source={props.img_url} style={styles.image} />
-      <Text style={styles.text}>{props.name}</Text>
+      <Text style={[styles.text, { color: theme.colors.onPrimaryContainer }]}>
+        {props.name}
+      </Text>
     </View>
   );
 }
@@ -24,7 +38,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 74,
     height: 74,
-    backgroundColor: "#e5e5e5",
     borderRadius: 37,
   },
   text: {

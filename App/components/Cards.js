@@ -2,12 +2,17 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
 import CreditCard from "./CreditCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IconButton, useTheme } from "react-native-paper";
+import NothingFound from "./NothingFound";
 
 export default function Cards(props) {
   const [height, setHeight] = useState("");
   const [width, setWidth] = useState("");
   const [cardWidth, setCardWidth] = useState(0);
   const [cards, setCards] = useState([]);
+  const [sort, setSort] = useState(false);
+
+  const theme = useTheme();
 
   const findCards = async () => {
     const result = await AsyncStorage.getItem("cards");
@@ -45,7 +50,49 @@ export default function Cards(props) {
 
   return (
     <View>
-      <Text style={styles.cardTitle}>CARDS</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          marginHorizontal: 15,
+        }}
+      >
+        <Text style={[styles.cardTitle, { color: theme.colors.secondary }]}>
+          Credit Cards
+        </Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          {sort ? (
+            <IconButton
+              icon="view-dashboard-outline"
+              onPress={() => setSort(false)}
+              style={{
+                padding: 0,
+                margin: 0,
+              }}
+            />
+          ) : (
+            <IconButton
+              icon="view-dashboard"
+              style={{
+                padding: 0,
+                margin: 0,
+                backgroundColor: !sort ? theme.colors.secondaryContainer : "",
+              }}
+            />
+          )}
+          <IconButton
+            icon="align-vertical-center"
+            onPress={() => setSort(true)}
+            style={{
+              backgroundColor: sort
+                ? theme.colors.secondaryContainer
+                : theme.colors.background,
+              padding: 0,
+              margin: 0,
+            }}
+          />
+        </View>
+      </View>
       {cards.length > 0 ? (
         <ScrollView
           horizontal={true}
@@ -53,7 +100,12 @@ export default function Cards(props) {
           snapToAlignment="start"
           snapToInterval={cardWidth + 10}
         >
-          <View style={styles.creditCardContainer}>
+          <View
+            style={[
+              styles.creditCardContainer,
+              { flexDirection: sort ? "row" : "column" },
+            ]}
+          >
             {cards.map((card) => (
               <CreditCard
                 key={card.id}
@@ -75,7 +127,7 @@ export default function Cards(props) {
           </View>
         </ScrollView>
       ) : (
-        <Text style={styles.noCardsText}>No cards found.</Text>
+        <NothingFound />
       )}
     </View>
   );
@@ -83,17 +135,16 @@ export default function Cards(props) {
 
 const styles = StyleSheet.create({
   cardTitle: {
-    fontSize: 16,
+    fontSize: 24,
     fontWeight: "bold",
     alignSelf: "flex-start",
-    paddingHorizontal: 10,
+    // paddingHorizontal: 15,
     paddingVertical: 5,
     letterSpacing: 0,
     color: "gray",
   },
   creditCardContainer: {
-    flexDirection: "row",
-    paddingHorizontal: 5,
+    paddingHorizontal: 13,
   },
   noCardsText: {
     textAlign: "center",
