@@ -20,7 +20,6 @@ export default function AddButton({ navigation }) {
       icon={open ? "window-close" : "plus"}
       elevation="500"
       variant="tertiary"
-      // backdropColor={theme.colors.primaryContainer}
       actions={[
         { icon: "plus", onPress: () => console.log("Pressed add") },
         {

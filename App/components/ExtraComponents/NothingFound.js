@@ -18,7 +18,7 @@ export default function NothingFound() {
           // height: "100%",
           backgroundColor: theme.colors.background,
         }}
-        source={require("../assets/Lottie/nothing_found.json")}
+        source={require("../../assets/Lottie/nothing_found.json")}
       />
       <View style={styles.buttonContainer}>
         <Text
@@ -41,7 +41,7 @@ export default function NothingFound() {
             // height: "100%",
             backgroundColor: theme.colors.background,
           }}
-          source={require("../assets/Lottie/animated_add_button.json")}
+          source={require("../../assets/Lottie/animated_add_button.json")}
         />
       </View>
     </View>

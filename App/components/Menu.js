@@ -7,6 +7,7 @@ import {
   Animated,
   useWindowDimensions,
   TouchableOpacity,
+  PanResponder,
 } from "react-native";
 import { Drawer, useTheme } from "react-native-paper";
 import LottieView from "lottie-react-native";
@@ -20,17 +21,17 @@ export default function Menu(props) {
   const [active, setActive] = useState("first");
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
+  const theme = useTheme();
+
+  const dimensions = useWindowDimensions();
+  const offsetValue = useRef(new Animated.Value(-dimensions.width)).current;
+
   const indexs = {
     0: "first",
     1: "fourth",
     3: "fifth",
     4: "sixth",
   };
-
-  const theme = useTheme();
-
-  const dimensions = useWindowDimensions();
-  const offsetValue = useRef(new Animated.Value(-dimensions.width)).current;
 
   const openMenu = () => {
     Animated.timing(offsetValue, {
@@ -45,6 +46,9 @@ export default function Menu(props) {
       duration: 250,
       useNativeDriver: true,
     }).start();
+    setTimeout(() => {
+      props.onPress();
+    }, 0);
   };
   useLayoutEffect(() => {
     setActive(indexs[props.index]);
@@ -60,13 +64,30 @@ export default function Menu(props) {
   useEffect(() => {
     if (props.isMenu) {
       openMenu();
-    } else {
-      closeMenu();
     }
-  }, [props.isMenu]);
+  }, []);
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (_, gestureState) => {
+        if (gestureState.dx < 0) {
+          offsetValue.setValue(gestureState.dx);
+        }
+      },
+      onPanResponderRelease: (_, gestureState) => {
+        if (gestureState.dx < -100) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
+      },
+    })
+  ).current;
 
   return (
     <Animated.View
+      {...panResponder.panHandlers}
       style={[
         styles.Container,
         {
@@ -91,7 +112,9 @@ export default function Menu(props) {
         ]}
         pressDuration={0}
         activeOpacity={1}
-        onPress={props.onPress}
+        onPress={() => {
+          closeMenu();
+        }}
       ></TouchableOpacity>
       <View
         style={[

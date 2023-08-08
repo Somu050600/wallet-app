@@ -10,9 +10,9 @@ import { useRoute } from "@react-navigation/native";
 import { useTheme } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AddButton from "../components/AddButton";
-import Cards from "../components/Cards";
-import Categories from "../components/Categories";
-import NothingFound from "../components/NothingFound";
+import Cards from "../components/CreditCardComponents/Cards";
+import Categories from "../components/CategoryComponents/Categories";
+import NothingFound from "../components/ExtraComponents/NothingFound";
 
 export default function HomeScreen(props) {
   const [nothing, setNothing] = useState(true);

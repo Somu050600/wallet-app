@@ -13,23 +13,23 @@ export default function Categories() {
   const [category, setCategory] = useState([
     {
       name: "Credit Cards",
-      img_url: require("../assets/Categories/credit-card.png"),
+      img_url: require("../../assets/Categories/credit-card.png"),
     },
     {
       name: "ID Cards",
-      img_url: require("../assets/Categories/id-card.png"),
+      img_url: require("../../assets/Categories/id-card.png"),
     },
     {
       name: "Gift Cards",
-      img_url: require("../assets/Categories/gift-card.png"),
+      img_url: require("../../assets/Categories/gift-card.png"),
     },
     {
       name: "Loyalty Cards",
-      img_url: require("../assets/Categories/loyalty-card.png"),
+      img_url: require("../../assets/Categories/loyalty-card.png"),
     },
     {
       name: "Access Cards",
-      img_url: require("../assets/Categories/access-card.png"),
+      img_url: require("../../assets/Categories/access-card.png"),
     },
   ]);
 

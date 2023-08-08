@@ -14,10 +14,10 @@ import { TextInput } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState, useRef } from "react";
 import { useRoute } from "@react-navigation/native";
-import CreditCard from "./CreditCard";
-import BackIcon from "./BackIcon";
-import DeleteIcon from "./DeleteIcon";
-import BottomMessage from "./BottomMessage";
+import CreditCard from "../components/CreditCardComponents/CreditCard";
+import BackIcon from "../components/ExtraComponents/BackIcon";
+import DeleteIcon from "../components/ExtraComponents/DeleteIcon";
+import BottomMessage from "../components/ExtraComponents/BottomMessage";
 import { useTheme } from "react-native-paper";
 
 export default function CCInputScreen({ navigation }) {

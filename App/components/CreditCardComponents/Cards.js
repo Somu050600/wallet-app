@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
+import { StyleSheet, Text, View, FlatList, Dimensions } from "react-native";
 import CreditCard from "./CreditCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IconButton, useTheme } from "react-native-paper";
-import NothingFound from "./NothingFound";
+import NothingFound from "../ExtraComponents/NothingFound";
 
 export default function Cards(props) {
   const [height, setHeight] = useState("");
@@ -16,10 +16,8 @@ export default function Cards(props) {
 
   const findCards = async () => {
     const result = await AsyncStorage.getItem("cards");
-    // console.log(result);
     if (result !== null) {
       setCards(JSON.parse(result));
-      // console.log("fetched Cards");
     } else {
       console.log("failed to fetch cards");
     }
@@ -29,6 +27,7 @@ export default function Cards(props) {
     setHeight(Dimensions.get("window").height);
     setWidth(Dimensions.get("window").width);
   }, []);
+
   useEffect(() => {
     findCards();
   }, [props.cards]);
@@ -47,6 +46,25 @@ export default function Cards(props) {
     });
     console.log("Card with ID:", id, "is pressed.");
   };
+
+  const renderCreditCard = ({ item: card }) => (
+    <CreditCard
+      key={card.id}
+      cardNumber={card.cardNumber}
+      nameOnCard={card.nameOnCard}
+      date={card.date}
+      cvv={card.cvv}
+      onPress={() =>
+        handleCardPress(
+          card.id,
+          card.cardNumber,
+          card.nameOnCard,
+          card.date,
+          card.cvv
+        )
+      }
+    />
+  );
 
   return (
     <View>
@@ -94,38 +112,19 @@ export default function Cards(props) {
         </View>
       </View>
       {cards.length > 0 ? (
-        <ScrollView
+        <FlatList
+          data={cards}
           horizontal={true}
           decelerationRate="fast"
           snapToAlignment="start"
           snapToInterval={cardWidth + 10}
-        >
-          <View
-            style={[
-              styles.creditCardContainer,
-              { flexDirection: sort ? "row" : "column" },
-            ]}
-          >
-            {cards.map((card) => (
-              <CreditCard
-                key={card.id}
-                cardNumber={card.cardNumber}
-                nameOnCard={card.nameOnCard}
-                date={card.date}
-                cvv={card.cvv}
-                onPress={() =>
-                  handleCardPress(
-                    card.id,
-                    card.cardNumber,
-                    card.nameOnCard,
-                    card.date,
-                    card.cvv
-                  )
-                }
-              />
-            ))}
-          </View>
-        </ScrollView>
+          renderItem={renderCreditCard}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={[
+            styles.creditCardContainer,
+            { flexDirection: sort ? "row" : "column" },
+          ]}
+        />
       ) : (
         <NothingFound />
       )}
@@ -138,7 +137,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     alignSelf: "flex-start",
-    // paddingHorizontal: 15,
     paddingVertical: 5,
     letterSpacing: 0,
     color: "gray",

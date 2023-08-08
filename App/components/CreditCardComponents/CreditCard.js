@@ -26,16 +26,16 @@ export default function CreditCard(props) {
   const [cvv, setCvv] = useState("");
   const [date, setDate] = useState("");
   const [viewCvv, setViewCvv] = useState("false");
-  const [cardType, setCardType] = useState("VISA");
+  const [cardType, setCardType] = useState("");
 
   const theme = useTheme();
   const dimensions = useWindowDimensions();
 
   const cardTypeOptions = {
-    VISA: require("../assets/creditCard/visa_icon.png"),
-    AMEX: require("../assets/creditCard/amex_icon.png"),
-    MASTER: require("../assets/creditCard/mastercard_icon.png"),
-    RUPAY: require("../assets/creditCard/rupay_icon.png"),
+    VISA: require("../../assets/creditCard/visa_icon.png"),
+    AMEX: require("../../assets/creditCard/amex_icon.png"),
+    MASTER: require("../../assets/creditCard/mastercard_icon.png"),
+    RUPAY: require("../../assets/creditCard/rupay_icon.png"),
   };
 
   function getCardType(number) {
@@ -101,7 +101,7 @@ export default function CreditCard(props) {
       ]}
     >
       <Image
-        source={require("../assets/creditCard/nfc.png")}
+        source={require("../../assets/creditCard/nfc.png")}
         style={[styles.nfc, { tintColor: theme.colors.onPrimaryContainer }]}
       />
       <TouchableOpacity
@@ -115,7 +115,7 @@ export default function CreditCard(props) {
         }}
       >
         <Image
-          source={require("../assets/creditCard/copy.png")}
+          source={require("../../assets/creditCard/copy.png")}
           style={[
             styles.copy,
             {

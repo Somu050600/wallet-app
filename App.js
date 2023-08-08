@@ -22,8 +22,8 @@ import {
   ActivityIndicator,
 } from "react-native-paper";
 import { useMaterial3Theme } from "@pchmn/expo-material3-theme";
-import LoginScreen from "./App/components/LoginScreen";
-import CCInputScreen from "./App/components/CCInputScreen";
+import LoginScreen from "./App/Screens/LoginScreen";
+import CCInputScreen from "./App/Screens/CCInputScreen";
 import Index from "./App/Index";
 import Navbar from "./App/components/Navbar";
 import ExploreScreen from "./App/Screens/ExploreScreen";
@@ -43,8 +43,7 @@ export default function App() {
   const [status, setStatus] = useState({});
   const [appState, setAppState] = useState(AppState.currentState);
 
-  // const dimensions = useWindowDimensions();
-  const dimensions = Dimensions.get("window");
+  const dimensions = useWindowDimensions();
 
   const paperTheme =
     colorScheme === "dark"
