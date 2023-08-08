@@ -41,7 +41,7 @@ export default function HomeScreen(props) {
 
   useLayoutEffect(() => {
     findCards();
-  }, []);
+  }, [cards]);
 
   useEffect(() => {
     if (refreshFlag) {
