@@ -26,12 +26,11 @@ import { useMaterial3Theme } from "@pchmn/expo-material3-theme";
 import LoginScreen from "./App/Screens/LoginScreen";
 import CCInputScreen from "./App/Screens/CCInputScreen";
 import Index from "./App/Index";
-import Navbar from "./App/components/Navbar";
 import ExploreScreen from "./App/Screens/ExploreScreen";
 import ScanScreen from "./App/Screens/ScanScreen";
 import SavedScreen from "./App/Screens/SavedScreen";
 import SettingsScreen from "./App/Screens/SettingsScreen";
-import { useEffect, useRef, useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect } from "react";
 import { Video, ResizeMode } from "expo-av";
 
 const Stack = createStackNavigator();

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, FlatList, Dimensions } from "react-native";
 import CreditCard from "./CreditCard";
+import CardDetail from "./CardDetail";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IconButton, useTheme } from "react-native-paper";
 import NothingFound from "../ExtraComponents/NothingFound";
@@ -37,7 +38,7 @@ export default function Cards(props) {
   }, [width]);
 
   const handleCardPress = (id, cardNumber, nameOnCard, date, cvv) => {
-    props.navigation.navigate("CCInput", {
+    props.navigation.push("CCInput", {
       id: id,
       cardNumber: cardNumber,
       nameOnCard: nameOnCard,
@@ -48,7 +49,7 @@ export default function Cards(props) {
   };
 
   const renderCreditCard = ({ item: card }) => (
-    <CreditCard
+    <CardDetail
       key={card.id}
       cardNumber={card.cardNumber}
       nameOnCard={card.nameOnCard}
@@ -115,6 +116,7 @@ export default function Cards(props) {
         <FlatList
           data={cards}
           horizontal={true}
+          showsHorizontalScrollIndicator={false}
           decelerationRate="fast"
           snapToAlignment="start"
           snapToInterval={cardWidth + 10}

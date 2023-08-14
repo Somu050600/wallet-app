@@ -29,14 +29,14 @@ export default function Header(props) {
   const openSearch = () => {
     Animated.timing(offsetValue, {
       toValue: 0,
-      duration: 550,
+      duration: 250,
       useNativeDriver: true,
     }).start();
   };
   const closeSearch = () => {
     Animated.timing(offsetValue, {
       toValue: 50,
-      duration: 550,
+      duration: 250,
       useNativeDriver: true,
     }).start();
   };

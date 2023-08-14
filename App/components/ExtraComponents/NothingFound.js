@@ -31,7 +31,7 @@ export default function NothingFound() {
             },
           ]}
         >
-          Add a Card
+          Nothing found, Please add a Card!
         </Text>
         <LottieView
           autoPlay
