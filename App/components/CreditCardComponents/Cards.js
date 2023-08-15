@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, FlatList, Dimensions } from "react-native";
-import CreditCard from "./CreditCard";
 import CardDetail from "./CardDetail";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IconButton, useTheme } from "react-native-paper";
@@ -19,6 +18,7 @@ export default function Cards(props) {
     const result = await AsyncStorage.getItem("cards");
     if (result !== null) {
       setCards(JSON.parse(result));
+      console.log(result);
     } else {
       console.log("failed to fetch cards");
     }
@@ -37,13 +37,14 @@ export default function Cards(props) {
     setCardWidth(width * 0.9);
   }, [width]);
 
-  const handleCardPress = (id, cardNumber, nameOnCard, date, cvv) => {
+  const handleCardPress = (id, cardNumber, nameOnCard, date, cvv, cardType) => {
     props.navigation.push("CCInput", {
       id: id,
       cardNumber: cardNumber,
       nameOnCard: nameOnCard,
       date: date,
       cvv: cvv,
+      cardType: cardType,
     });
     console.log("Card with ID:", id, "is pressed.");
   };
@@ -55,13 +56,15 @@ export default function Cards(props) {
       nameOnCard={card.nameOnCard}
       date={card.date}
       cvv={card.cvv}
+      cardType={card.cardType}
       onPress={() =>
         handleCardPress(
           card.id,
           card.cardNumber,
           card.nameOnCard,
           card.date,
-          card.cvv
+          card.cvv,
+          card.cardType
         )
       }
     />

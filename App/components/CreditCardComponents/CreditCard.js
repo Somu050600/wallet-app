@@ -6,7 +6,6 @@ import {
   Text,
   View,
   Image,
-  Dimensions,
   TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
@@ -39,38 +38,19 @@ export default function CreditCard(props) {
     RUPAY: require("../../assets/creditCard/rupay_icon.png"),
   };
 
-  function getCardType(number) {
-    const numberFormated = number.replace(/\D/g, "");
-
-    if (numberFormated.length < 4) {
-      return undefined; // Cannot determine card type yet
-    }
-
-    if (/^4/.test(numberFormated)) {
-      return "VISA";
-    } else if (/^3/.test(numberFormated)) {
-      return "AMEX";
-    } else {
-      var patterns = {
-        MASTER: /^5[1-5][0-9]{14}$/,
-        RUPAY: /^(508[5-9][0-9]{10})|(6069[8-9][0-9]{10})|(607[0-8][0-9]{10})$/,
-      };
-      for (var key in patterns) {
-        if (patterns[key].test(numberFormated)) {
-          return key;
-        }
-      }
-    }
-    return "VISA"; // Default to Visa if none of the conditions match
-  }
-
   useEffect(() => {
     setCardNumber(props.cardNumber || "1234567890123456");
     setNameOnCard(props.nameOnCard || "Christopher Nolan");
     setDate(props.date || "MM/YY");
     setCvv(props.cvv || "123");
-    setCardType(getCardType(props.cardNumber));
-  }, [props.cardNumber, props.nameOnCard, props.date, props.cvv]);
+    setCardType(props.cardType);
+  }, [
+    props.cardNumber,
+    props.nameOnCard,
+    props.date,
+    props.cvv,
+    props.cardType,
+  ]);
 
   // console.log(cardType);
 

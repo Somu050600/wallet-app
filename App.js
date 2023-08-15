@@ -5,6 +5,7 @@ import {
   createStackNavigator,
   TransitionPresets,
 } from "@react-navigation/stack";
+import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import {
   AppRegistry,
   useColorScheme,
@@ -25,6 +26,7 @@ import {
 import { useMaterial3Theme } from "@pchmn/expo-material3-theme";
 import LoginScreen from "./App/Screens/LoginScreen";
 import CCInputScreen from "./App/Screens/CCInputScreen";
+import CreditCardScreen from "./App/Screens/CreditCardScreen";
 import Index from "./App/Index";
 import ExploreScreen from "./App/Screens/ExploreScreen";
 import ScanScreen from "./App/Screens/ScanScreen";
@@ -33,7 +35,7 @@ import SettingsScreen from "./App/Screens/SettingsScreen";
 import { useState, useLayoutEffect } from "react";
 import { Video, ResizeMode } from "expo-av";
 
-const Stack = createStackNavigator();
+const Stack = createSharedElementStackNavigator();
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -78,7 +80,7 @@ export default function App() {
               gestureEnabled: true,
               cardOverlayEnabled: true,
               headerStatusBarHeight: 5000,
-              ...TransitionPresets.ModalTransition,
+              // ...TransitionPresets.ModalTransition,
             })}
           >
             <Stack.Screen name="Login" component={LoginScreen} />
@@ -87,6 +89,7 @@ export default function App() {
             <Stack.Screen name="Scan" component={ScanScreen} />
             <Stack.Screen name="Saved" component={SavedScreen} />
             <Stack.Screen name="Settings" component={SettingsScreen} />
+            <Stack.Screen name="CCScreen" component={CreditCardScreen} />
             <Stack.Screen
               name="CCInput"
               component={CCInputScreen}

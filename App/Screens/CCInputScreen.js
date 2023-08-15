@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useRoute } from "@react-navigation/native";
 import CreditCard from "../components/CreditCardComponents/CreditCard";
 import BackIcon from "../components/ExtraComponents/BackIcon";
@@ -27,6 +27,7 @@ export default function CCInputScreen({ navigation }) {
   const [date, setDate] = useState("");
   const [cvv, setCvv] = useState("");
   const [cardId, setCardId] = useState("");
+  const [cardType, setCardType] = useState("");
   const [showMessage, setShowMessage] = useState(false);
 
   const inputRefs = useRef([]);
@@ -46,6 +47,7 @@ export default function CCInputScreen({ navigation }) {
     setNameOnCard(route.params?.nameOnCard || "");
     setDate(route.params?.date || "");
     setCvv(route.params?.cvv || "");
+    setCardType(route.params?.cardType || "");
   }, [route.params?.id]);
 
   const handleTextChange = (text, index) => {
@@ -60,6 +62,7 @@ export default function CCInputScreen({ navigation }) {
   const handleInputChange = (text) => {
     const numericValue = text.replace(/[^0-9]/g, "");
     setCardNumber(numericValue);
+    setCardType(getCardType(numericValue));
   };
   const handleExpiryDate = (text) => {
     const numericValue = text.replace(/[^0-9]/g, "");
@@ -117,21 +120,54 @@ export default function CCInputScreen({ navigation }) {
 
   useEffect(() => {
     findCards();
+    // setCardType(getCardType(cardNumber));
   }, []);
 
+  function getCardType(number) {
+    const numberFormated = number.replace(/\D/g, "");
+
+    if (numberFormated.length < 4) {
+      return undefined; // Cannot determine card type yet
+    }
+
+    if (/^4/.test(numberFormated)) {
+      return "VISA";
+    } else if (/^3/.test(numberFormated)) {
+      return "AMEX";
+    } else {
+      var patterns = {
+        MASTER: /^5[1-5][0-9]{14}$/,
+        RUPAY: /^(508[5-9][0-9]{10})|(6069[8-9][0-9]{10})|(607[0-8][0-9]{10})$/,
+      };
+      for (var key in patterns) {
+        if (patterns[key].test(numberFormated)) {
+          return key;
+        }
+      }
+    }
+    return "VISA"; // Default to Visa if none of the conditions match
+  }
+
   const handleSave = async () => {
-    if (cardNumber && nameOnCard && date && cvv) {
+    if (cardNumber && nameOnCard && date && cvv && cardType) {
       const isCardExists = cardDetails.some(
         (existingCard) => existingCard.cardNumber === cardNumber
       );
       if (isCardExists) {
         alert("Card already exists! Try another Card");
       } else {
-        const card = { id: cardNumber, cardNumber, nameOnCard, date, cvv };
+        const card = {
+          id: cardNumber,
+          cardNumber: cardNumber,
+          nameOnCard: nameOnCard,
+          date: date,
+          cvv: cvv,
+          cardType: cardType,
+        };
         const updateCardDetails = [...cardDetails, card];
         setCardDetails(updateCardDetails);
-        console.log(cardDetails, "handelSave");
         await AsyncStorage.setItem("cards", JSON.stringify(updateCardDetails));
+        await console.log(cardDetails, "handelSave");
         // await AsyncStorage.clear();
         await navigation.navigate("Home", { cards: updateCardDetails });
       }
@@ -149,6 +185,7 @@ export default function CCInputScreen({ navigation }) {
       nameOnCard: nameOnCard,
       date: date,
       cvv: cvv,
+      cardType: cardType,
     };
     updateCard(cardIdToUpdate, updatedCardData);
     setShowMessage(true);
@@ -220,6 +257,7 @@ export default function CCInputScreen({ navigation }) {
               nameOnCard={nameOnCard}
               date={date}
               cvv={cvv}
+              cardType={cardType}
             />
           </View>
 

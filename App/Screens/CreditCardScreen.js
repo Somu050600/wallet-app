@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
+import { useRoute } from "@react-navigation/native";
 
 const formatCardNumber = (number) => {
   if (!number) {
@@ -20,7 +21,7 @@ const formatCardNumber = (number) => {
   return formattedNumber ? formattedNumber.join(" ") : "";
 };
 
-export default function CardDetail(props) {
+export default function CreditCardScreen(props) {
   var [cardWidth, setCardWidth] = useState(0);
   const [cardNumber, setCardNumber] = useState("");
   const [nameOnCard, setNameOnCard] = useState("");
@@ -28,19 +29,22 @@ export default function CardDetail(props) {
 
   const theme = useTheme();
   const dimensions = useWindowDimensions();
+  const route = useRoute();
 
   const cardTypeOptions = {
-    VISA: require("../../assets/creditCard/visa_icon.png"),
-    AMEX: require("../../assets/creditCard/amex_icon.png"),
-    MASTER: require("../../assets/creditCard/mastercard_icon.png"),
-    RUPAY: require("../../assets/creditCard/rupay_icon.png"),
+    VISA: require("../assets/creditCard/visa_icon.png"),
+    AMEX: require("../assets/creditCard/amex_icon.png"),
+    MASTER: require("../assets/creditCard/mastercard_icon.png"),
+    RUPAY: require("../assets/creditCard/rupay_icon.png"),
   };
 
   useEffect(() => {
-    setCardNumber(props.cardNumber || "1234567890123456");
-    setNameOnCard(props.nameOnCard || "Christopher Nolan");
-    setCardType(props.cardType);
-  }, [props.cardNumber, props.nameOnCard, props.cardType]);
+    // setCardId(route.params?.id || null);
+    setCardNumber(route.params?.cardNumber || "");
+    setNameOnCard(route.params?.nameOnCard || "");
+    // setDate(route.params?.date || "");
+    // setCvv(route.params?.cvv || "");
+  }, [route.params?.id]);
 
   useEffect(() => {
     setCardWidth(dimensions.width * 0.9);
@@ -66,7 +70,7 @@ export default function CardDetail(props) {
       ]}
     >
       <Image
-        source={require("../../assets/creditCard/nfc.png")}
+        source={require("../assets/creditCard/nfc.png")}
         style={[styles.nfc, { tintColor: theme.colors.onPrimaryContainer }]}
       />
 
@@ -90,7 +94,7 @@ export default function CardDetail(props) {
           </Text>
           <TouchableOpacity onPress={() => copyToClipboard()}>
             <Image
-              source={require("../../assets/creditCard/copy.png")}
+              source={require("../assets/creditCard/copy.png")}
               style={[
                 styles.copy,
                 {
@@ -106,7 +110,7 @@ export default function CardDetail(props) {
           {nameOnCard}
         </Text>
       </View>
-      <Image source={cardTypeOptions[cardType]} fit style={styles.cardType} />
+      <Image source={cardTypeOptions[cardType]} style={styles.cardType} />
     </TouchableOpacity>
   );
 }
@@ -156,7 +160,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     left: 20,
-    objectFit: "cover",
   },
   copy: {
     width: 20,
