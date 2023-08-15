@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
+import { SharedElement } from "react-navigation-shared-element";
 
 const formatCardNumber = (number) => {
   if (!number) {
@@ -20,7 +21,7 @@ const formatCardNumber = (number) => {
   return formattedNumber ? formattedNumber.join(" ") : "";
 };
 
-export default function CardDetail(props) {
+export default function CardList(props) {
   var [cardWidth, setCardWidth] = useState(0);
   const [cardNumber, setCardNumber] = useState("");
   const [nameOnCard, setNameOnCard] = useState("");
@@ -37,10 +38,10 @@ export default function CardDetail(props) {
   };
 
   useEffect(() => {
-    setCardNumber(props.cardNumber || "1234567890123456");
-    setNameOnCard(props.nameOnCard || "Christopher Nolan");
-    setCardType(props.cardType);
-  }, [props.cardNumber, props.nameOnCard, props.cardType]);
+    setCardNumber(props.card.cardNumber || "1234567890123456");
+    setNameOnCard(props.card.nameOnCard || "Christopher Nolan");
+    setCardType(props.card.cardType);
+  }, [props.card.cardNumber, props.card.nameOnCard, props.card.cardType]);
 
   useEffect(() => {
     setCardWidth(dimensions.width * 0.9);
@@ -51,67 +52,79 @@ export default function CardDetail(props) {
   };
 
   return (
-    <TouchableOpacity
-      activeOpacity={0.7}
-      onPress={props.onPress}
-      style={[
-        styles.container,
-        {
-          width: cardWidth,
-          backgroundColor: theme.colors.primaryContainer,
-          borderColor: theme.colors.onPrimaryContainer,
-          overflow: "hidden",
-          shadowColor: theme.colors.onPrimaryContainer,
-        },
-      ]}
-    >
-      <Image
-        source={require("../../assets/creditCard/nfc.png")}
-        style={[styles.nfc, { tintColor: theme.colors.onPrimaryContainer }]}
-      />
-
-      <View style={styles.titles}>
-        <View
-          style={{
-            color: theme.colors.onPrimaryContainer,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            // backgroundColor: "black",
-          }}
-        >
+    <SharedElement id={props.card.id} style={[StyleSheet.wrapper]}>
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={props.onPress}
+        style={[
+          styles.container,
+          {
+            width: cardWidth,
+            backgroundColor: theme.colors.primaryContainer,
+            borderColor: theme.colors.onPrimaryContainer,
+            overflow: "hidden",
+            shadowColor: theme.colors.onPrimaryContainer,
+          },
+        ]}
+      >
+        <Image
+          source={require("../../assets/creditCard/nfc.png")}
+          style={[styles.nfc, { tintColor: theme.colors.onPrimaryContainer }]}
+        />
+        {/* <SharedElement id={props.card.cardName} style={styles.titlesContainer}> */}
+        <View style={styles.titles}>
+          <View
+            style={{
+              color: theme.colors.onPrimaryContainer,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              // backgroundColor: "black",
+            }}
+          >
+            <Text
+              style={[
+                styles.cardNumber,
+                { color: theme.colors.onPrimaryContainer },
+              ]}
+            >
+              {formatCardNumber(cardNumber)}
+            </Text>
+            <TouchableOpacity onPress={() => copyToClipboard()}>
+              <Image
+                source={require("../../assets/creditCard/copy.png")}
+                style={[
+                  styles.copy,
+                  {
+                    tintColor: theme.colors.onPrimaryContainer,
+                  },
+                ]}
+              />
+            </TouchableOpacity>
+          </View>
           <Text
             style={[
-              styles.cardNumber,
+              styles.cardName,
               { color: theme.colors.onPrimaryContainer },
             ]}
           >
-            {formatCardNumber(cardNumber)}
+            {nameOnCard}
           </Text>
-          <TouchableOpacity onPress={() => copyToClipboard()}>
-            <Image
-              source={require("../../assets/creditCard/copy.png")}
-              style={[
-                styles.copy,
-                {
-                  tintColor: theme.colors.onPrimaryContainer,
-                },
-              ]}
-            />
-          </TouchableOpacity>
         </View>
-        <Text
-          style={[styles.cardName, { color: theme.colors.onPrimaryContainer }]}
-        >
-          {nameOnCard}
-        </Text>
-      </View>
-      <Image source={cardTypeOptions[cardType]} fit style={styles.cardType} />
-    </TouchableOpacity>
+        {/* </SharedElement> */}
+
+        <Image source={cardTypeOptions[cardType]} fit style={styles.cardType} />
+      </TouchableOpacity>
+    </SharedElement>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    ...StyleSheet.absoluteFillObject,
+    top: 10,
+    backgroundColor: "transparent",
+  },
   background: {
     position: "absolute",
     left: 0,
@@ -179,4 +192,12 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     bottom: 20,
   },
+  // titlesContainer: {
+  //   position: "absolute",
+  //   marginTop: 20,
+  //   marginLeft: 20,
+  //   paddingBottom: 0,
+  //   bottom: 20,
+  //   // backgroundColor: "black",
+  // },
 });

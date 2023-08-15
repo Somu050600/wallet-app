@@ -26,7 +26,7 @@ import {
 import { useMaterial3Theme } from "@pchmn/expo-material3-theme";
 import LoginScreen from "./App/Screens/LoginScreen";
 import CCInputScreen from "./App/Screens/CCInputScreen";
-import CreditCardScreen from "./App/Screens/CreditCardScreen";
+import CCDetailScreen from "./App/Screens/CCDetailScreen";
 import Index from "./App/Index";
 import ExploreScreen from "./App/Screens/ExploreScreen";
 import ScanScreen from "./App/Screens/ScanScreen";
@@ -89,7 +89,7 @@ export default function App() {
             <Stack.Screen name="Scan" component={ScanScreen} />
             <Stack.Screen name="Saved" component={SavedScreen} />
             <Stack.Screen name="Settings" component={SettingsScreen} />
-            <Stack.Screen name="CCScreen" component={CreditCardScreen} />
+            <Stack.Screen name="CCScreen" component={CCDetailScreen} />
             <Stack.Screen
               name="CCInput"
               component={CCInputScreen}

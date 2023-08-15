@@ -42,13 +42,13 @@ export default function CCInputScreen({ navigation }) {
   const route = useRoute();
 
   useEffect(() => {
-    setCardId(route.params?.id || null);
-    setCardNumber(route.params?.cardNumber || "");
-    setNameOnCard(route.params?.nameOnCard || "");
-    setDate(route.params?.date || "");
-    setCvv(route.params?.cvv || "");
-    setCardType(route.params?.cardType || "");
-  }, [route.params?.id]);
+    setCardId(route.params?.card.id || null);
+    setCardNumber(route.params?.card.cardNumber || "");
+    setNameOnCard(route.params?.card.nameOnCard || "");
+    setDate(route.params?.card.date || "");
+    setCvv(route.params?.card.cvv || "");
+    setCardType(route.params?.card.cardType || "");
+  }, [route.params?.card]);
 
   const handleTextChange = (text, index) => {
     if (
@@ -98,7 +98,7 @@ export default function CCInputScreen({ navigation }) {
     setCardDetails(updatedCardDetails);
     try {
       await AsyncStorage.setItem("cards", JSON.stringify(updatedCardDetails));
-      console.log("Card details updated in AsyncStorage.");
+      // console.log("Card details updated in AsyncStorage.");
       setTimeout(async () => {
         await navigation.navigate("Home", { cards: updatedCardDetails });
       }, 500);
@@ -167,7 +167,7 @@ export default function CCInputScreen({ navigation }) {
         const updateCardDetails = [...cardDetails, card];
         setCardDetails(updateCardDetails);
         await AsyncStorage.setItem("cards", JSON.stringify(updateCardDetails));
-        await console.log(cardDetails, "handelSave");
+        // await console.log(cardDetails, "handelSave");
         // await AsyncStorage.clear();
         await navigation.navigate("Home", { cards: updateCardDetails });
       }
@@ -176,7 +176,7 @@ export default function CCInputScreen({ navigation }) {
     }
   };
   const handleCancel = () => {
-    navigation.navigate("Home");
+    navigation.goBack();
   };
   const handleUpdate = () => {
     const cardIdToUpdate = cardId;
@@ -253,6 +253,7 @@ export default function CCInputScreen({ navigation }) {
         >
           <View style={styles.creditCard}>
             <CreditCard
+              id={cardId}
               cardNumber={cardNumber}
               nameOnCard={nameOnCard}
               date={date}

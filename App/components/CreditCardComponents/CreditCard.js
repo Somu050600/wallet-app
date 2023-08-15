@@ -9,12 +9,12 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
+import { SharedElement } from "react-navigation-shared-element";
 
 const formatCardNumber = (number) => {
   if (!number) {
     return "";
   }
-  const maskedNumber = number.replace(/^\d{12}/, "************");
   const formattedNumber = number.replace(/\s/g, "").match(/.{1,4}/g);
   return formattedNumber ? formattedNumber.join(" ") : "";
 };
@@ -67,127 +67,141 @@ export default function CreditCard(props) {
   };
 
   return (
-    <TouchableOpacity
-      activeOpacity={0.7}
-      onPress={props.onPress}
-      style={[
-        styles.container,
-        {
-          width: cardWidth,
-          backgroundColor: theme.colors.primaryContainer,
-          borderColor: theme.colors.onPrimaryContainer,
-          overflow: "hidden",
-          shadowColor: theme.colors.onPrimaryContainer,
-        },
-      ]}
-    >
-      <Image
-        source={require("../../assets/creditCard/nfc.png")}
-        style={[styles.nfc, { tintColor: theme.colors.onPrimaryContainer }]}
-      />
+    <SharedElement id={props.id} style={[StyleSheet.wrapper]}>
       <TouchableOpacity
-        onPress={() => copyToClipboard()}
-        style={{
-          position: "absolute",
-          width: 30,
-          height: 30,
-          right: 10,
-          top: 20,
-        }}
+        activeOpacity={0.7}
+        onPress={props.onPress}
+        style={[
+          styles.container,
+          {
+            width: cardWidth,
+            backgroundColor: theme.colors.primaryContainer,
+            borderColor: theme.colors.onPrimaryContainer,
+            overflow: "hidden",
+            shadowColor: theme.colors.onPrimaryContainer,
+          },
+        ]}
       >
         <Image
-          source={require("../../assets/creditCard/copy.png")}
-          style={[
-            styles.copy,
-            {
-              tintColor: theme.colors.onPrimaryContainer,
-            },
-          ]}
+          source={require("../../assets/creditCard/nfc.png")}
+          style={[styles.nfc, { tintColor: theme.colors.onPrimaryContainer }]}
         />
-      </TouchableOpacity>
-      <View style={styles.titles}>
-        <Text
-          style={[
-            styles.cardNumber,
-            { color: theme.colors.onPrimaryContainer },
-          ]}
+        <TouchableOpacity
+          onPress={() => copyToClipboard()}
+          style={{
+            position: "absolute",
+            width: 30,
+            height: 30,
+            right: 10,
+            top: 20,
+          }}
         >
-          {formatCardNumber(cardNumber)}
-        </Text>
-        <Text
-          style={[styles.cardName, { color: theme.colors.onPrimaryContainer }]}
-        >
-          {nameOnCard}
-        </Text>
-      </View>
-      <View style={styles.dateCvv}>
-        <View style={styles.dateContainer}>
-          <Text
-            style={{ fontSize: 16, color: theme.colors.onPrimaryContainer }}
-          >
-            Expiry date
-          </Text>
+          <Image
+            source={require("../../assets/creditCard/copy.png")}
+            style={[
+              styles.copy,
+              {
+                tintColor: theme.colors.onPrimaryContainer,
+              },
+            ]}
+          />
+        </TouchableOpacity>
+        <View style={styles.titles}>
           <Text
             style={[
-              styles.dateField,
+              styles.cardNumber,
               { color: theme.colors.onPrimaryContainer },
             ]}
           >
-            {date}
+            {formatCardNumber(cardNumber)}
+          </Text>
+          <Text
+            style={[
+              styles.cardName,
+              { color: theme.colors.onPrimaryContainer },
+            ]}
+          >
+            {nameOnCard}
           </Text>
         </View>
-        <View style={styles.cvvContainer}>
-          <View style={{ flexDirection: "row" }}>
+        <View style={styles.dateCvv}>
+          <View style={styles.dateContainer}>
             <Text
               style={{ fontSize: 16, color: theme.colors.onPrimaryContainer }}
             >
-              CVV
+              Expiry date
             </Text>
+            <Text
+              style={[
+                styles.dateField,
+                { color: theme.colors.onPrimaryContainer },
+              ]}
+            >
+              {date}
+            </Text>
+          </View>
+          <View style={styles.cvvContainer}>
+            <View style={{ flexDirection: "row" }}>
+              <Text
+                style={{ fontSize: 16, color: theme.colors.onPrimaryContainer }}
+              >
+                CVV
+              </Text>
+              {viewCvv ? (
+                <IconButton
+                  icon="eye-off-outline"
+                  iconColor={theme.colors.onPrimaryContainer}
+                  size={20}
+                  style={styles.hide}
+                  onPress={handleViewCvv}
+                />
+              ) : (
+                <IconButton
+                  icon="eye"
+                  iconColor={theme.colors.onPrimaryContainer}
+                  size={20}
+                  style={styles.hide}
+                  onPress={handleViewCvv}
+                />
+              )}
+            </View>
             {viewCvv ? (
-              <IconButton
-                icon="eye-off-outline"
-                iconColor={theme.colors.onPrimaryContainer}
-                size={20}
-                style={styles.hide}
-                onPress={handleViewCvv}
-              />
+              <Text
+                style={[
+                  styles.cvvField,
+                  { color: theme.colors.onPrimaryContainer },
+                ]}
+              >
+                ***
+              </Text>
             ) : (
-              <IconButton
-                icon="eye"
-                iconColor={theme.colors.onPrimaryContainer}
-                size={20}
-                style={styles.hide}
-                onPress={handleViewCvv}
-              />
+              <Text
+                style={[
+                  styles.cvvField,
+                  { color: theme.colors.onPrimaryContainer },
+                ]}
+              >
+                {cvv}
+              </Text>
             )}
           </View>
-          {viewCvv ? (
-            <Text
-              style={[
-                styles.cvvField,
-                { color: theme.colors.onPrimaryContainer },
-              ]}
-            >
-              ***
-            </Text>
-          ) : (
-            <Text
-              style={[
-                styles.cvvField,
-                { color: theme.colors.onPrimaryContainer },
-              ]}
-            >
-              {cvv}
-            </Text>
-          )}
         </View>
-      </View>
-      <Image source={cardTypeOptions[cardType]} style={styles.cardType} />
-    </TouchableOpacity>
+        <Image source={cardTypeOptions[cardType]} style={styles.cardType} />
+      </TouchableOpacity>
+    </SharedElement>
   );
 }
 
+CreditCard.sharedElements = (route) => {
+  return [{ id: props.id }];
+};
+
 const styles = StyleSheet.create({
+  wrapper: {
+    ...StyleSheet.absoluteFillObject,
+    top: 10,
+    backgroundColor: "transparent",
+  },
   background: {
     position: "absolute",
     left: 0,
