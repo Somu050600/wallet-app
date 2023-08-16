@@ -1,1 +1,1 @@
-[<img src="https://raw.githubusercontent.com/Thukor/MazeSolver/master/resources/download.png" width="25"/>](https://expo.dev/artifacts/eas/3CiidL1r3aD72BJrSVxyVb.apk)
+[![Download APK](https://user-images.githubusercontent.com/114044633/223920025-83687de0-e463-4c5d-8122-e06e4bb7d40c.png)](https://expo.dev/artifacts/eas/iYGhqhYcL3m4P9RLfxsc6E.apk)
