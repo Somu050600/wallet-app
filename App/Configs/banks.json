@@ -1,0 +1,159 @@
+{
+  "banks": [
+    {
+      "key": 0,
+      "name": "State Bank of India",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 1,
+      "name": "HDFC Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 2,
+      "name": "ICICI Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 3,
+      "name": "Axis Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 4,
+      "name": "Kotak Mahindra Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 5,
+      "name": "Punjab National Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 6,
+      "name": "Bank of Baroda",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 7,
+      "name": "Canara Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 8,
+      "name": "Union Bank of India",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 9,
+      "name": "Indian Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 10,
+      "name": "HSBC",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 11,
+      "name": "Allahabad Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 12,
+      "name": "Oriental Bank of Commerce",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 13,
+      "name": "Syndicate Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 14,
+      "name": "United Bank of India",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 15,
+      "name": "IndusInd Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 16,
+      "name": "Karnataka Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 17,
+      "name": "City Union Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 18,
+      "name": "Dena Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 19,
+      "name": "Indian Overseas Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 20,
+      "name": "J&K Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 21,
+      "name": "IDBI Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 22,
+      "name": "Bank of Maharashtra",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 23,
+      "name": "Bank of Baroda (Mumbai)",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 24,
+      "name": "Bank of Baroda (Delhi)",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 25,
+      "name": "Bank of Baroda (Chennai)",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 26,
+      "name": "Bharatiya Mahila Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 27,
+      "name": "Nabard",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 28,
+      "name": "Paytm Payments Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 29,
+      "name": "RBL Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    },
+    {
+      "key": 30,
+      "name": "Yes Bank",
+      "logoFilename": "../../assets/bank_logos/hdfc.png"
+    }
+  ]
+}

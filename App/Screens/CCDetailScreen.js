@@ -15,6 +15,8 @@ import {
 import { useRoute } from "@react-navigation/native";
 import { SharedElement } from "react-navigation-shared-element";
 import * as Animatable from "react-native-animatable";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LottieView from "lottie-react-native";
 
 const formatCardNumber = (number) => {
   if (!number) {
@@ -91,9 +93,9 @@ export default function CCDetailScreen(props) {
                     "cards",
                     JSON.stringify(cardsArray)
                   );
-                  setCardDetails(cardsArray);
+                  // setCardDetails(cardsArray);
                   alert("Card deleted successfully!");
-                  navigation.navigate("Home", { cards: cardsArray });
+                  props.navigation.navigate("Home", { cards: cardsArray });
                 } else {
                   alert("Card not found with the specified ID.");
                 }
@@ -286,7 +288,7 @@ export default function CCDetailScreen(props) {
             props.navigation.navigate("CCInput", { card: route.params?.card })
           }
         />
-        <IconButton
+        {/* <IconButton
           icon="delete"
           size={32}
           style={{
@@ -294,7 +296,27 @@ export default function CCDetailScreen(props) {
           }}
           iconColor={theme.colors.onPrimary}
           onPress={() => handleDelete(route.params?.card.id)}
-        />
+        /> */}
+        <TouchableOpacity
+          style={{
+            width: 50,
+            height: 50,
+            backgroundColor: "red",
+            borderRadius: 25,
+          }}
+          onPress={() => handleDelete(route.params?.card.id)}
+        >
+          <LottieView
+            autoPlay
+            style={{
+              width: 100,
+              height: 100,
+              // backgroundColor: theme.colors.background,
+              transform: [{ translateX: -12.5 }, { translateY: -10 }],
+            }}
+            source={require("../assets/Lottie/delete_animation.json")}
+          />
+        </TouchableOpacity>
       </Animatable.View>
     </SafeAreaView>
   );
@@ -335,6 +357,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "70%",
     justifyContent: "space-evenly",
+    alignItems: "center",
   },
   cardNumber: {
     fontSize: 26,

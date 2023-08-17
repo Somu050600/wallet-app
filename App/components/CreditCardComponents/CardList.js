@@ -11,6 +11,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { SharedElement } from "react-navigation-shared-element";
+import { banks } from "../../Configs/banks.json";
 
 const formatCardNumber = (number) => {
   if (!number) {
@@ -23,12 +24,15 @@ const formatCardNumber = (number) => {
 
 export default function CardList(props) {
   var [cardWidth, setCardWidth] = useState(0);
+  const [bankName, setBankName] = useState("Bank Name");
+  const [isCreditCard, setIsCreditCard] = useState("Card Type");
   const [cardNumber, setCardNumber] = useState("");
   const [nameOnCard, setNameOnCard] = useState("");
   const [cardType, setCardType] = useState("");
 
   const theme = useTheme();
   const dimensions = useWindowDimensions();
+  const defaultBankLogo = require("../../assets/bank_logos/default_bank.png");
 
   const cardTypeOptions = {
     VISA: require("../../assets/creditCard/visa_icon.png"),
@@ -37,7 +41,19 @@ export default function CardList(props) {
     RUPAY: require("../../assets/creditCard/rupay_icon.png"),
   };
 
+  const bankLogos = {
+    "State Bank of India": require("../../assets/bank_logos/sbi.png"),
+    "HDFC Bank": require("../../assets/bank_logos/hdfc.png"),
+    "ICICI Bank": require("../../assets/bank_logos/icici.png"),
+    "Axis Bank": require("../../assets/bank_logos/axis.png"),
+    "Kotak Mahindra Bank": require("../../assets/bank_logos/kotak.png"),
+    "City Union Bank": require("../../assets/bank_logos/citi.png"),
+    HSBC: require("../../assets/bank_logos/hsbc.png"),
+  };
+
   useEffect(() => {
+    setBankName(props.card.bankName || "Bank Name");
+    setIsCreditCard(props.card.isCreditCard || "Card Type");
     setCardNumber(props.card.cardNumber || "1234567890123456");
     setNameOnCard(props.card.nameOnCard || "Christopher Nolan");
     setCardType(props.card.cardType);
@@ -73,6 +89,23 @@ export default function CardList(props) {
         />
         {/* <SharedElement id={props.card.cardName} style={styles.titlesContainer}> */}
         <View style={styles.titles}>
+          <View
+            style={{
+              flexDirection: "row",
+              marginBottom: 20,
+              alignItems: "center",
+            }}
+          >
+            <Image
+              source={bankLogos[bankName] || defaultBankLogo}
+              style={[
+                styles.bankIcon,
+                // { tintColor: theme.colors.onPrimaryContainer },
+              ]}
+            />
+            <Text style={{ fontSize: 18, fontWeight: 600 }}>{bankName} </Text>
+            <Text> {isCreditCard}</Text>
+          </View>
           <View
             style={{
               color: theme.colors.onPrimaryContainer,
@@ -132,6 +165,15 @@ const styles = StyleSheet.create({
     top: 0,
     height: 205,
     borderRadius: 10,
+  },
+  bankIcon: {
+    width: 30,
+    height: 30,
+    // padding: 10,
+    // backgroundColor: "black",
+    // borderRadius: 15,
+    marginRight: 10,
+    resizeMode: "contain",
   },
   container: {
     position: "relative",

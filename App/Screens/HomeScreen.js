@@ -52,9 +52,9 @@ export default function HomeScreen(props) {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
+    findCards();
     setTimeout(() => {
       setRefreshing(false);
-      props.navigation.navigate("Home");
     }, 2000);
   }, []);
 

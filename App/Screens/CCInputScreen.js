@@ -1,16 +1,24 @@
 import {
   StyleSheet,
-  Text,
+  // Text,
   View,
   ScrollView,
   SafeAreaView,
   // TextInput,
   KeyboardAvoidingView,
-  Button,
+  // Button,
   Pressable,
   Alert,
 } from "react-native";
-import { TextInput } from "react-native-paper";
+import {
+  TextInput,
+  RadioButton,
+  List,
+  Modal,
+  Portal,
+  Text,
+  Button,
+} from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useRoute } from "@react-navigation/native";
@@ -19,9 +27,12 @@ import BackIcon from "../components/ExtraComponents/BackIcon";
 import DeleteIcon from "../components/ExtraComponents/DeleteIcon";
 import BottomMessage from "../components/ExtraComponents/BottomMessage";
 import { useTheme } from "react-native-paper";
+import { banks } from "../Configs/banks.json";
 
 export default function CCInputScreen({ navigation }) {
   const [cardDetails, setCardDetails] = useState([]);
+  const [bankName, setBankName] = useState("Bank Name");
+  const [isCreditCard, setIsCreditCard] = useState("Card Type");
   const [cardNumber, setCardNumber] = useState("");
   const [nameOnCard, setNameOnCard] = useState("");
   const [date, setDate] = useState("");
@@ -29,6 +40,18 @@ export default function CCInputScreen({ navigation }) {
   const [cardId, setCardId] = useState("");
   const [cardType, setCardType] = useState("");
   const [showMessage, setShowMessage] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [isBank, setIsBank] = useState(true);
+
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+  const containerStyle = {
+    borderRadius: 20,
+    width: "80%",
+    backgroundColor: "white",
+    padding: 20,
+    alignSelf: "center",
+  };
 
   const inputRefs = useRef([]);
   const inputConfigs = [
@@ -43,6 +66,8 @@ export default function CCInputScreen({ navigation }) {
 
   useEffect(() => {
     setCardId(route.params?.card.id || null);
+    setBankName(route.params?.card.bankName || "Select a Bank");
+    setIsCreditCard(route.params?.card.isCreditCard || "Card Type");
     setCardNumber(route.params?.card.cardNumber || "");
     setNameOnCard(route.params?.card.nameOnCard || "");
     setDate(route.params?.card.date || "");
@@ -149,7 +174,7 @@ export default function CCInputScreen({ navigation }) {
   }
 
   const handleSave = async () => {
-    if (cardNumber && nameOnCard && date && cvv && cardType) {
+    if (cardNumber.length == 16 && nameOnCard && date && cvv && cardType) {
       const isCardExists = cardDetails.some(
         (existingCard) => existingCard.cardNumber === cardNumber
       );
@@ -158,6 +183,8 @@ export default function CCInputScreen({ navigation }) {
       } else {
         const card = {
           id: cardNumber,
+          bankName: bankName,
+          isCreditCard: isCreditCard,
           cardNumber: cardNumber,
           nameOnCard: nameOnCard,
           date: date,
@@ -171,6 +198,8 @@ export default function CCInputScreen({ navigation }) {
         // await AsyncStorage.clear();
         await navigation.navigate("Home", { cards: updateCardDetails });
       }
+    } else if (cardNumber.length < 16) {
+      alert("Please Enter 16 digits in Card Number");
     } else {
       alert("Please fill all fields");
     }
@@ -181,6 +210,8 @@ export default function CCInputScreen({ navigation }) {
   const handleUpdate = () => {
     const cardIdToUpdate = cardId;
     const updatedCardData = {
+      bankName: bankName,
+      isCreditCard: isCreditCard,
       cardNumber: cardNumber,
       nameOnCard: nameOnCard,
       date: date,
@@ -260,6 +291,89 @@ export default function CCInputScreen({ navigation }) {
               cvv={cvv}
               cardType={cardType}
             />
+          </View>
+          <View style={{ width: "80%", alignSelf: "center" }}>
+            <Portal>
+              <Modal
+                visible={visible}
+                onDismiss={hideModal}
+                contentContainerStyle={containerStyle}
+              >
+                <ScrollView>
+                  {isBank ? (
+                    <List.Section title="Select a Bank Account">
+                      {banks.map((bank) => {
+                        return (
+                          <List.Item
+                            key={bank.key}
+                            title={bank.name}
+                            onPress={() => {
+                              setBankName(bank.name);
+                              hideModal();
+                            }}
+                          />
+                        );
+                      })}
+                    </List.Section>
+                  ) : (
+                    <List.Section title="Select Card Type">
+                      <List.Item
+                        title="Credit card"
+                        onPress={() => {
+                          setIsCreditCard("Credit Card");
+                          hideModal();
+                        }}
+                      />
+                      <List.Item
+                        title="Debit card"
+                        onPress={() => {
+                          setIsCreditCard("Debit Card");
+                          hideModal();
+                        }}
+                      />
+                    </List.Section>
+                  )}
+                </ScrollView>
+              </Modal>
+            </Portal>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-around",
+              }}
+            >
+              <Button
+                style={{
+                  width: "45%",
+                  borderWidth: 1,
+                  borderColor: theme.colors.onPrimaryContainer,
+                  borderRadius: 4,
+                }}
+                onPress={() => {
+                  setIsBank(true);
+                  showModal();
+                }}
+              >
+                {bankName}
+              </Button>
+              <Button
+                style={{
+                  width: "45%",
+                  // backgroundColor: theme.colors.tertiaryContainer,
+                  borderWidth: 1,
+                  borderColor: theme.colors.onPrimaryContainer,
+                  borderRadius: 4,
+                  alignItems: "center",
+                }}
+                onPress={() => {
+                  setIsBank(false);
+                  showModal();
+                }}
+              >
+                {isCreditCard}
+              </Button>
+            </View>
           </View>
 
           <View style={styles.div}>

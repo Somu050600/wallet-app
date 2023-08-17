@@ -79,7 +79,7 @@ export default function App() {
               headerShown: false,
               gestureEnabled: true,
               cardOverlayEnabled: true,
-              headerStatusBarHeight: 5000,
+              // headerStatusBarHeight: 5000,
               // ...TransitionPresets.ModalTransition,
             })}
           >
