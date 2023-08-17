@@ -11,7 +11,6 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { SharedElement } from "react-navigation-shared-element";
-import { banks } from "../../Configs/banks.json";
 
 const formatCardNumber = (number) => {
   if (!number) {
@@ -48,6 +47,7 @@ export default function CardList(props) {
     "Axis Bank": require("../../assets/bank_logos/axis.png"),
     "Kotak Mahindra Bank": require("../../assets/bank_logos/kotak.png"),
     "City Union Bank": require("../../assets/bank_logos/citi.png"),
+    "SBM Bank": require("../../assets/bank_logos/one_card.png"),
     HSBC: require("../../assets/bank_logos/hsbc.png"),
   };
 
@@ -103,7 +103,15 @@ export default function CardList(props) {
                 // { tintColor: theme.colors.onPrimaryContainer },
               ]}
             />
-            <Text style={{ fontSize: 18, fontWeight: 600 }}>{bankName} </Text>
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: 600,
+                color: theme.colors.primary,
+              }}
+            >
+              {bankName}{" "}
+            </Text>
             <Text> {isCreditCard}</Text>
           </View>
           <View

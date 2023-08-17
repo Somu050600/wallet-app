@@ -48,7 +48,6 @@ export default function CCInputScreen({ navigation }) {
   const containerStyle = {
     borderRadius: 20,
     width: "80%",
-    backgroundColor: "white",
     padding: 20,
     alignSelf: "center",
   };
@@ -297,7 +296,12 @@ export default function CCInputScreen({ navigation }) {
               <Modal
                 visible={visible}
                 onDismiss={hideModal}
-                contentContainerStyle={containerStyle}
+                contentContainerStyle={[
+                  containerStyle,
+                  {
+                    backgroundColor: theme.colors.background,
+                  },
+                ]}
               >
                 <ScrollView>
                   {isBank ? (
