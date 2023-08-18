@@ -76,16 +76,16 @@ export default function CardList(props) {
           styles.container,
           {
             width: cardWidth,
-            backgroundColor: theme.colors.primaryContainer,
+            backgroundColor: theme.colors.onPrimaryContainer,
             borderColor: theme.colors.onPrimaryContainer,
             overflow: "hidden",
-            shadowColor: theme.colors.onPrimaryContainer,
+            shadowColor: theme.colors.primaryContainer,
           },
         ]}
       >
         <Image
           source={require("../../assets/creditCard/nfc.png")}
-          style={[styles.nfc, { tintColor: theme.colors.onPrimaryContainer }]}
+          style={[styles.nfc, { tintColor: theme.colors.primaryContainer }]}
         />
         {/* <SharedElement id={props.card.cardName} style={styles.titlesContainer}> */}
         <View style={styles.titles}>
@@ -107,16 +107,23 @@ export default function CardList(props) {
               style={{
                 fontSize: 18,
                 fontWeight: 600,
-                color: theme.colors.primary,
+                color: theme.colors.onPrimary,
               }}
             >
               {bankName}{" "}
             </Text>
-            <Text> {isCreditCard}</Text>
+            <Text
+              style={{
+                color: theme.colors.onPrimary,
+              }}
+            >
+              {" "}
+              {isCreditCard}
+            </Text>
           </View>
           <View
             style={{
-              color: theme.colors.onPrimaryContainer,
+              color: theme.colors.primaryContainer,
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "center",
@@ -126,7 +133,7 @@ export default function CardList(props) {
             <Text
               style={[
                 styles.cardNumber,
-                { color: theme.colors.onPrimaryContainer },
+                { color: theme.colors.primaryContainer },
               ]}
             >
               {formatCardNumber(cardNumber)}
@@ -137,17 +144,14 @@ export default function CardList(props) {
                 style={[
                   styles.copy,
                   {
-                    tintColor: theme.colors.onPrimaryContainer,
+                    tintColor: theme.colors.primaryContainer,
                   },
                 ]}
               />
             </TouchableOpacity>
           </View>
           <Text
-            style={[
-              styles.cardName,
-              { color: theme.colors.onPrimaryContainer },
-            ]}
+            style={[styles.cardName, { color: theme.colors.primaryContainer }]}
           >
             {nameOnCard}
           </Text>
@@ -196,7 +200,7 @@ const styles = StyleSheet.create({
     elevation: 3,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5,
-    // opacity: 0.5,
+    opacity: 0.99,
     // blurRadius: 100,
   },
   cardNumber: {

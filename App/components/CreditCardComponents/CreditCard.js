@@ -75,10 +75,11 @@ export default function CreditCard(props) {
           styles.container,
           {
             width: cardWidth,
-            backgroundColor: theme.colors.primaryContainer,
-            borderColor: theme.colors.onPrimaryContainer,
+            backgroundColor: theme.colors.onPrimaryContainer,
+            borderWidth: 1,
+            borderColor: theme.colors.primaryContainer,
             overflow: "hidden",
-            shadowColor: theme.colors.onPrimaryContainer,
+            shadowColor: theme.colors.primaryContainer,
           },
         ]}
       >
@@ -101,7 +102,7 @@ export default function CreditCard(props) {
             style={[
               styles.copy,
               {
-                tintColor: theme.colors.onPrimaryContainer,
+                tintColor: theme.colors.primaryContainer,
               },
             ]}
           />
@@ -110,16 +111,13 @@ export default function CreditCard(props) {
           <Text
             style={[
               styles.cardNumber,
-              { color: theme.colors.onPrimaryContainer },
+              { color: theme.colors.primaryContainer },
             ]}
           >
             {formatCardNumber(cardNumber)}
           </Text>
           <Text
-            style={[
-              styles.cardName,
-              { color: theme.colors.onPrimaryContainer },
-            ]}
+            style={[styles.cardName, { color: theme.colors.primaryContainer }]}
           >
             {nameOnCard}
           </Text>
@@ -127,14 +125,14 @@ export default function CreditCard(props) {
         <View style={styles.dateCvv}>
           <View style={styles.dateContainer}>
             <Text
-              style={{ fontSize: 16, color: theme.colors.onPrimaryContainer }}
+              style={{ fontSize: 16, color: theme.colors.primaryContainer }}
             >
               Expiry date
             </Text>
             <Text
               style={[
                 styles.dateField,
-                { color: theme.colors.onPrimaryContainer },
+                { color: theme.colors.primaryContainer },
               ]}
             >
               {date}
@@ -143,14 +141,14 @@ export default function CreditCard(props) {
           <View style={styles.cvvContainer}>
             <View style={{ flexDirection: "row" }}>
               <Text
-                style={{ fontSize: 16, color: theme.colors.onPrimaryContainer }}
+                style={{ fontSize: 16, color: theme.colors.primaryContainer }}
               >
                 CVV
               </Text>
               {viewCvv ? (
                 <IconButton
                   icon="eye-off-outline"
-                  iconColor={theme.colors.onPrimaryContainer}
+                  iconColor={theme.colors.primaryContainer}
                   size={20}
                   style={styles.hide}
                   onPress={handleViewCvv}
@@ -158,7 +156,7 @@ export default function CreditCard(props) {
               ) : (
                 <IconButton
                   icon="eye"
-                  iconColor={theme.colors.onPrimaryContainer}
+                  iconColor={theme.colors.primaryContainer}
                   size={20}
                   style={styles.hide}
                   onPress={handleViewCvv}
@@ -169,7 +167,7 @@ export default function CreditCard(props) {
               <Text
                 style={[
                   styles.cvvField,
-                  { color: theme.colors.onPrimaryContainer },
+                  { color: theme.colors.primaryContainer },
                 ]}
               >
                 ***
@@ -178,7 +176,7 @@ export default function CreditCard(props) {
               <Text
                 style={[
                   styles.cvvField,
-                  { color: theme.colors.onPrimaryContainer },
+                  { color: theme.colors.primaryContainer },
                 ]}
               >
                 {cvv}
