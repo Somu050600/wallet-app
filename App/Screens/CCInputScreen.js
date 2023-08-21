@@ -344,12 +344,12 @@ export default function CCInputScreen({ navigation }) {
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "space-around",
+                justifyContent: "space-between",
               }}
             >
               <Button
                 style={{
-                  width: "45%",
+                  width: "47.5%",
                   borderWidth: 1,
                   borderColor: theme.colors.onPrimaryContainer,
                   borderRadius: 4,
@@ -363,7 +363,7 @@ export default function CCInputScreen({ navigation }) {
               </Button>
               <Button
                 style={{
-                  width: "45%",
+                  width: "47.5%",
                   // backgroundColor: theme.colors.tertiaryContainer,
                   borderWidth: 1,
                   borderColor: theme.colors.onPrimaryContainer,
@@ -414,49 +414,48 @@ export default function CCInputScreen({ navigation }) {
           <View
             style={[
               styles.div,
-              { flexDirection: "row", justifyContent: "space-around" },
+              { flexDirection: "row", justifyContent: "space-between" },
             ]}
           >
-            <View>
-              <TextInput
-                label={"Expiry Date"}
-                mode="outlined"
-                style={[styles.textInput, { width: 120, alignSelf: "center" }]}
-                value={date}
-                onChangeText={(text) => {
-                  handleExpiryDate(text);
-                  handleTextChange(text, 2);
-                }}
-                ref={(ref) => (inputRefs.current[2] = ref)}
-                placeholder="MM / YY"
-                placeholderTextColor="gray"
-                keyboardType="numeric"
-                maxLength={7}
-              />
-            </View>
-            <View>
-              <TextInput
-                label={"CVV"}
-                mode="outlined"
-                style={[
-                  styles.textInput,
-                  {
-                    width: 120,
-                    alignSelf: "center",
-                  },
-                ]}
-                value={cvv}
-                onChangeText={(text) => {
-                  setCvv(text);
-                  handleTextChange(text, 3);
-                }}
-                ref={(ref) => (inputRefs.current[3] = ref)}
-                placeholder="123"
-                placeholderTextColor="black"
-                keyboardType="numeric"
-                maxLength={4}
-              />
-            </View>
+            <TextInput
+              label={"Expiry Date"}
+              mode="outlined"
+              style={[
+                styles.textInput,
+                { width: "47.5%", alignSelf: "center" },
+              ]}
+              value={date}
+              onChangeText={(text) => {
+                handleExpiryDate(text);
+                handleTextChange(text, 2);
+              }}
+              ref={(ref) => (inputRefs.current[2] = ref)}
+              placeholder="MM / YY"
+              placeholderTextColor="gray"
+              keyboardType="numeric"
+              maxLength={7}
+            />
+            <TextInput
+              label={"CVV"}
+              mode="outlined"
+              style={[
+                styles.textInput,
+                {
+                  width: "47.5%",
+                  alignSelf: "center",
+                },
+              ]}
+              value={cvv}
+              onChangeText={(text) => {
+                setCvv(text);
+                handleTextChange(text, 3);
+              }}
+              ref={(ref) => (inputRefs.current[3] = ref)}
+              placeholder="123"
+              placeholderTextColor="black"
+              keyboardType="numeric"
+              maxLength={4}
+            />
           </View>
         </KeyboardAvoidingView>
         <View style={styles.btn_container}>
@@ -465,14 +464,14 @@ export default function CCInputScreen({ navigation }) {
           </Pressable>
           {cardId ? (
             <Pressable style={styles.button2} onPress={() => handleUpdate()}>
-              <Text style={styles.btn_text}>Update</Text>
+              <Text style={styles.btn_text}>Update Card</Text>
             </Pressable>
           ) : (
             <Pressable
               style={styles.button2}
               onPress={() => handleSave(cardId)}
             >
-              <Text style={styles.btn_text}>Save</Text>
+              <Text style={styles.btn_text}>Save Card</Text>
             </Pressable>
           )}
         </View>
@@ -489,8 +488,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: 30,
     width: "80%",
-    flexDirection: "row",
-    justifyContent: "space-around",
+    flexDirection: "column-reverse",
+    justifyContent: "space-between",
+    paddingBottom: 30,
     // borderColor: "black",
     // borderWidth: 0.5,
   },
@@ -498,18 +498,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 15,
-    paddingHorizontal: 32,
-    borderRadius: 4,
-    elevation: 3,
+    // paddingHorizontal: 32,
+    marginTop: 10,
+    borderRadius: 25,
+    elevation: 13,
     backgroundColor: "black",
   },
   button2: {
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 15,
-    paddingHorizontal: 32,
-    borderRadius: 4,
-    elevation: 3,
+    // paddingHorizontal: 32,
+    borderRadius: 25,
+    elevation: 13,
     backgroundColor: "#2196F3",
   },
   btn_text: {

@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, FlatList, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Dimensions,
+  useWindowDimensions,
+} from "react-native";
 import CardList from "./CardList";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IconButton, useTheme } from "react-native-paper";
 import NothingFound from "../ExtraComponents/NothingFound";
 
 export default function Cards(props) {
-  const [height, setHeight] = useState("");
-  const [width, setWidth] = useState("");
   const [cardWidth, setCardWidth] = useState(0);
   const [cards, setCards] = useState([]);
-  const [sort, setSort] = useState(false);
+  const [sort, setSort] = useState(null);
 
   const theme = useTheme();
+  const dimensions = useWindowDimensions();
 
   const findCards = async () => {
     const result = await AsyncStorage.getItem("cards");
@@ -23,19 +29,38 @@ export default function Cards(props) {
       console.log("failed to fetch cards");
     }
   };
-
-  useEffect(() => {
-    setHeight(Dimensions.get("window").height);
-    setWidth(Dimensions.get("window").width);
-  }, []);
+  const findSort = async () => {
+    const result = await AsyncStorage.getItem("cards-sort");
+    if (result !== null) {
+      setSort(JSON.parse(result));
+      // console.log(JSON.parse(result, sort, "###"));
+    } else {
+      console.log("failed to fetch cards-sort");
+    }
+  };
 
   useEffect(() => {
     findCards();
   }, [props.cards]);
 
   useEffect(() => {
-    setCardWidth(width * 0.9);
-  }, [width]);
+    setCardWidth(dimensions.width * 0.9);
+    if (sort === null) {
+      setSort(false);
+    }
+    findSort();
+  }, []);
+
+  const handleSaveSort = async (sort) => {
+    setSort(sort);
+    try {
+      await AsyncStorage.setItem("cards-sort", JSON.stringify(sort));
+      // await findSort();
+      // console.log(sort);
+    } catch {
+      console.error();
+    }
+  };
 
   const handleCardPress = (card) => {
     props.navigation.navigate("CCScreen", { card });
@@ -62,7 +87,7 @@ export default function Cards(props) {
           {sort ? (
             <IconButton
               icon="view-dashboard-outline"
-              onPress={() => setSort(false)}
+              onPress={() => handleSaveSort(!sort)}
               style={{
                 padding: 0,
                 margin: 0,
@@ -71,6 +96,7 @@ export default function Cards(props) {
           ) : (
             <IconButton
               icon="view-dashboard"
+              onPress={() => handleSaveSort(!sort)}
               style={{
                 padding: 0,
                 margin: 0,
@@ -80,7 +106,7 @@ export default function Cards(props) {
           )}
           <IconButton
             icon="align-vertical-center"
-            onPress={() => setSort(true)}
+            onPress={() => handleSaveSort(!sort)}
             style={{
               backgroundColor: sort
                 ? theme.colors.secondaryContainer

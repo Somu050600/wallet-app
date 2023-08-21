@@ -79,7 +79,8 @@ export default function CardList(props) {
             backgroundColor: theme.colors.onPrimaryContainer,
             borderColor: theme.colors.onPrimaryContainer,
             overflow: "hidden",
-            shadowColor: theme.colors.primaryContainer,
+            shadowColor: theme.colors.onPrimaryContainer,
+            // shadowColor: "red",
           },
         ]}
       >
@@ -196,11 +197,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
     marginHorizontal: 5,
-    marginVertical: 10,
-    elevation: 3,
+    marginVertical: 5,
+    elevation: 5,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5,
-    opacity: 0.99,
+    opacity: 1,
     // blurRadius: 100,
   },
   cardNumber: {

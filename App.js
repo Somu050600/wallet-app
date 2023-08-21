@@ -32,22 +32,41 @@ import ExploreScreen from "./App/Screens/ExploreScreen";
 import ScanScreen from "./App/Screens/ScanScreen";
 import SavedScreen from "./App/Screens/SavedScreen";
 import SettingsScreen from "./App/Screens/SettingsScreen";
-import { useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 import { Video, ResizeMode } from "expo-av";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createSharedElementStackNavigator();
 
-export default function App() {
+export default function App(props) {
+  const [themeColor, setThemeColor] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const colorScheme = useColorScheme();
   const { theme } = useMaterial3Theme();
 
+  const { width, height } = useWindowDimensions();
+
   const paperTheme =
-    colorScheme === "dark"
+    themeColor === "dark"
       ? { ...MD3DarkTheme, colors: theme.dark }
       : { ...MD3LightTheme, colors: theme.light };
 
-  useLayoutEffect(() => {
+  const findTheme = async () => {
+    await AsyncStorage.getItem("theme-color").then((res) => {
+      res === "System Default"
+        ? setThemeColor(colorScheme)
+        : setThemeColor(res);
+    });
+  };
+
+  useEffect(() => {
+    {
+      findTheme();
+      if (!themeColor && colorScheme) {
+        setThemeColor(colorScheme);
+      }
+    }
+
     setTimeout(async () => {
       setIsLoading(false);
     }, 1700);
@@ -55,9 +74,18 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1 }}>
+      <View
+        style={{
+          height: height + 40,
+          width: width,
+        }}
+      >
         <Video
-          style={{ flex: 1 }}
+          style={{
+            height: "110%",
+            width: "110%",
+            transform: [{ translateY: -40 }],
+          }}
           source={require("./App/assets/Video/logo_flow.mp4")}
           useNativeControls
           shouldPlay
