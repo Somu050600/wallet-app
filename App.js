@@ -22,6 +22,7 @@ import {
   MD3LightTheme,
   MD3DarkTheme,
   ActivityIndicator,
+  useTheme,
 } from "react-native-paper";
 import { useMaterial3Theme } from "@pchmn/expo-material3-theme";
 import LoginScreen from "./App/Screens/LoginScreen";
@@ -43,6 +44,8 @@ export default function App(props) {
   const [isLoading, setIsLoading] = useState(true);
   const colorScheme = useColorScheme();
   const { theme } = useMaterial3Theme();
+
+  const theme1 = useTheme();
 
   const { width, height } = useWindowDimensions();
 
@@ -66,27 +69,21 @@ export default function App(props) {
         setThemeColor(colorScheme);
       }
     }
+  }, [colorScheme]);
 
-    setTimeout(async () => {
+  useEffect(() => {
+    setTimeout(() => {
       setIsLoading(false);
     }, 1700);
   }, []);
 
   if (isLoading) {
     return (
-      <View
-        style={{
-          height: height + 40,
-          width: width,
-        }}
-      >
+      <View style={{ flex: 1, backgroundColor: theme1.colors.background }}>
+        <StatusBar style="auto" />
         <Video
-          style={{
-            height: "110%",
-            width: "110%",
-            transform: [{ translateY: -40 }],
-          }}
-          source={require("./App/assets/Video/logo_flow.mp4")}
+          style={{ flex: 1 }}
+          source={require("./App/assets/Video/logo_flow_2.mp4")}
           useNativeControls
           shouldPlay
           resizeMode={ResizeMode.COVER}

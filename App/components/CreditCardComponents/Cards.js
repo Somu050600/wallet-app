@@ -92,6 +92,7 @@ export default function Cards(props) {
                 padding: 0,
                 margin: 0,
               }}
+              size={18}
             />
           ) : (
             <IconButton
@@ -102,6 +103,7 @@ export default function Cards(props) {
                 margin: 0,
                 backgroundColor: !sort ? theme.colors.secondaryContainer : "",
               }}
+              size={18}
             />
           )}
           <IconButton
@@ -114,6 +116,7 @@ export default function Cards(props) {
               padding: 0,
               margin: 0,
             }}
+            size={18}
           />
         </View>
       </View>
@@ -141,7 +144,7 @@ export default function Cards(props) {
 
 const styles = StyleSheet.create({
   cardTitle: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: "bold",
     alignSelf: "flex-start",
     paddingVertical: 5,

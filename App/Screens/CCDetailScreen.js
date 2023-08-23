@@ -17,6 +17,7 @@ import { SharedElement } from "react-navigation-shared-element";
 import * as Animatable from "react-native-animatable";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LottieView from "lottie-react-native";
+import BackIcon from "../components/ExtraComponents/BackIcon";
 
 const formatCardNumber = (number) => {
   if (!number) {
@@ -124,6 +125,20 @@ export default function CCDetailScreen(props) {
         backgroundColor: theme.colors.background,
       }}
     >
+      <View
+        style={{
+          position: "absolute",
+          top: 40,
+          left: 0,
+          paddingHorizontal: 20,
+          paddingVertical: 10,
+          width: "100%",
+          borderColor: theme.colors.primaryContainer,
+          borderBottomWidth: 0.25,
+        }}
+      >
+        <BackIcon onPress={() => props.navigation.goBack()} />
+      </View>
       <SharedElement id={route.params?.card.id} style={[StyleSheet.wrapper]}>
         <TouchableOpacity
           activeOpacity={0.7}

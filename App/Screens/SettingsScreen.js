@@ -28,7 +28,7 @@ export default function SettingsScreen(props) {
 
   const findTheme = async () => {
     await AsyncStorage.getItem("theme-color").then((res) => {
-      res === "System Default"
+      res === "System Default" || res === undefined
         ? setThemeColor("System Default")
         : setThemeColor(res);
     });
