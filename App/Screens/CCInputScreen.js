@@ -9,6 +9,7 @@ import {
   // Button,
   Pressable,
   Alert,
+  ToastAndroid,
 } from "react-native";
 import {
   TextInput,
@@ -178,7 +179,7 @@ export default function CCInputScreen({ navigation }) {
         (existingCard) => existingCard.cardNumber === cardNumber
       );
       if (isCardExists) {
-        alert("Card already exists! Try another Card");
+        alert("Card Number already exists! Try another Card");
       } else {
         const card = {
           id: cardNumber,
@@ -195,6 +196,7 @@ export default function CCInputScreen({ navigation }) {
         await AsyncStorage.setItem("cards", JSON.stringify(updateCardDetails));
         // await console.log(cardDetails, "handelSave");
         // await AsyncStorage.clear();
+        ToastAndroid.show("Card Saved!😎", ToastAndroid.SHORT);
         await navigation.navigate("Home", { cards: updateCardDetails });
       }
     } else if (cardNumber.length < 16) {
@@ -218,8 +220,9 @@ export default function CCInputScreen({ navigation }) {
       cardType: cardType,
     };
     updateCard(cardIdToUpdate, updatedCardData);
-    setShowMessage(true);
-    setTimeout(() => setShowMessage(false), 2000);
+    // setShowMessage(true);
+    // setTimeout(() => setShowMessage(false), 2000);
+    ToastAndroid.show("Card Updated!😎", ToastAndroid.SHORT);
   };
   const handleDelete = async (id) => {
     Alert.alert(
@@ -247,7 +250,11 @@ export default function CCInputScreen({ navigation }) {
                     JSON.stringify(cardsArray)
                   );
                   setCardDetails(cardsArray);
-                  alert("Card deleted successfully!");
+                  // alert("Card deleted successfully!");
+                  ToastAndroid.show(
+                    "Card deleted successfully!",
+                    ToastAndroid.SHORT
+                  );
                   navigation.navigate("Home", { cards: cardsArray });
                 } else {
                   alert("Card not found with the specified ID.");
@@ -476,9 +483,9 @@ export default function CCInputScreen({ navigation }) {
           )}
         </View>
       </ScrollView>
-      {showMessage && (
+      {/* {showMessage && (
         <BottomMessage message={"Card Updated!😎"} style={styles.bottom_msg} />
-      )}
+      )} */}
     </SafeAreaView>
   );
 }

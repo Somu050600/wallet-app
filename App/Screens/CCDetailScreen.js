@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   Alert,
+  ToastAndroid,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { SharedElement } from "react-navigation-shared-element";
@@ -95,7 +96,11 @@ export default function CCDetailScreen(props) {
                     JSON.stringify(cardsArray)
                   );
                   // setCardDetails(cardsArray);
-                  alert("Card deleted successfully!");
+                  // alert("Card deleted successfully!");
+                  ToastAndroid.show(
+                    "Card deleted successfully!",
+                    ToastAndroid.SHORT
+                  );
                   props.navigation.navigate("Home", { cards: cardsArray });
                 } else {
                   alert("Card not found with the specified ID.");
