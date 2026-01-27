@@ -1,18 +1,20 @@
 import React, { useState, useRef } from "react";
-import { Button, StyleSheet, View, Text } from "react-native";
+import { Button, StyleSheet, View, Text, useWindowDimensions } from "react-native";
 import LottieView from "lottie-react-native";
 import { useTheme } from "react-native-paper";
 
 export default function SavedScreen(props) {
   const theme = useTheme();
+  const { width } = useWindowDimensions();
+  const size = Math.min(width, 320);
 
   return (
     <View style={styles.animationContainer}>
       <LottieView
         autoPlay
         style={{
-          width: "100%",
-          // height: "100%",
+          width: size,
+          height: size,
           backgroundColor: theme.colors.background,
         }}
         source={require("../assets/Lottie/app_scrolling.json")}

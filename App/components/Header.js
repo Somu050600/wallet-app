@@ -1,15 +1,14 @@
+import * as Font from "expo-font";
+import { useEffect, useRef, useState } from "react";
 import {
+  Animated,
   StyleSheet,
   Text,
-  View,
-  Image,
-  SafeAreaView,
-  Animated,
   useWindowDimensions,
+  View,
 } from "react-native";
-import { useTheme, IconButton, Searchbar } from "react-native-paper";
-import * as Font from "expo-font";
-import { useEffect, useState, useRef } from "react";
+import { IconButton, Searchbar, useTheme } from "react-native-paper";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 const customFonts = {
   "Inter-Black": require("./../assets/Fonts/Borel-Regular.ttf"),
@@ -21,6 +20,7 @@ export default function Header(props) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const dimensions = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const offsetValue = useRef(new Animated.Value(50)).current;
 
   const theme = useTheme();
@@ -58,7 +58,11 @@ export default function Header(props) {
 
   return (
     <SafeAreaView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
+      edges={["left", "right"]}
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.background, top: insets.top },
+      ]}
     >
       <Animated.View
         style={{
@@ -180,7 +184,6 @@ export default function Header(props) {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    top: 40,
     backgroundColor: "#f1f1f1",
     flexDirection: "row",
     height: 50,

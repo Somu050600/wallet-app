@@ -11,8 +11,8 @@ export default function ExploreScreen(props) {
       <LottieView
         autoPlay
         style={{
-          width: "100%",
-          // height: "100%",
+          width: 280,
+          height: 280,
           backgroundColor: theme.colors.background,
         }}
         source={require("../assets/Lottie/austronut.json")}

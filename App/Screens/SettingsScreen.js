@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import LottieView from "lottie-react-native";
 import {
@@ -11,11 +11,12 @@ import {
 } from "react-native-paper";
 import { ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ThemeContext } from "../ThemeContext";
 
 export default function SettingsScreen(props) {
   const [themeColor, setThemeColor] = useState("System Default");
   const [visible, setVisible] = useState(false);
-
+  const { setThemePreference } = useContext(ThemeContext);
   const theme = useTheme();
 
   const showModal = () => setVisible(true);
@@ -24,6 +25,7 @@ export default function SettingsScreen(props) {
   const handleTheme = async (e) => {
     setThemeColor(e);
     await AsyncStorage.setItem("theme-color", e);
+    setThemePreference?.(e);
   };
 
   const findTheme = async () => {
@@ -36,7 +38,7 @@ export default function SettingsScreen(props) {
 
   useEffect(() => {
     findTheme();
-  });
+  }, []);
   return (
     <View style={styles.animationContainer}>
       <View
@@ -125,8 +127,8 @@ export default function SettingsScreen(props) {
       <LottieView
         autoPlay
         style={{
-          width: "100%",
-          // height: "100%",
+          width: 280,
+          height: 280,
           backgroundColor: theme.colors.background,
         }}
         source={require("../assets/Lottie/thanking_idea.json")}

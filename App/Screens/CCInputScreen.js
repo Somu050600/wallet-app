@@ -1,33 +1,29 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRoute } from "@react-navigation/native";
+import { useEffect, useRef, useState } from "react";
 import {
-  StyleSheet,
-  // Text,
-  View,
-  ScrollView,
-  SafeAreaView,
-  // TextInput,
-  KeyboardAvoidingView,
-  // Button,
-  Pressable,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
   ToastAndroid,
+  View,
 } from "react-native";
 import {
-  TextInput,
-  RadioButton,
+  Button,
   List,
   Modal,
   Portal,
   Text,
-  Button,
+  TextInput,
+  useTheme,
 } from "react-native-paper";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState, useRef, useLayoutEffect } from "react";
-import { useRoute } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import CreditCard from "../components/CreditCardComponents/CreditCard";
 import BackIcon from "../components/ExtraComponents/BackIcon";
 import DeleteIcon from "../components/ExtraComponents/DeleteIcon";
-import BottomMessage from "../components/ExtraComponents/BottomMessage";
-import { useTheme } from "react-native-paper";
 import { banks } from "../Configs/banks.json";
 
 export default function CCInputScreen({ navigation }) {
@@ -65,14 +61,26 @@ export default function CCInputScreen({ navigation }) {
   const route = useRoute();
 
   useEffect(() => {
-    setCardId(route.params?.card.id || null);
-    setBankName(route.params?.card.bankName || "Select a Bank");
-    setIsCreditCard(route.params?.card.isCreditCard || "Card Type");
-    setCardNumber(route.params?.card.cardNumber || "");
-    setNameOnCard(route.params?.card.nameOnCard || "");
-    setDate(route.params?.card.date || "");
-    setCvv(route.params?.card.cvv || "");
-    setCardType(route.params?.card.cardType || "");
+    const card = route.params?.card;
+    if (!card) {
+      setCardId(null);
+      setBankName("Select a Bank");
+      setIsCreditCard("Card Type");
+      setCardNumber("");
+      setNameOnCard("");
+      setDate("");
+      setCvv("");
+      setCardType("");
+      return;
+    }
+    setCardId(card.id ?? null);
+    setBankName(card.bankName || "Select a Bank");
+    setIsCreditCard(card.isCreditCard || "Card Type");
+    setCardNumber(card.cardNumber || "");
+    setNameOnCard(card.nameOnCard || "");
+    setDate(card.date || "");
+    setCvv(card.cvv || "");
+    setCardType(card.cardType || "");
   }, [route.params?.card]);
 
   const handleTextChange = (text, index) => {
@@ -118,7 +126,7 @@ export default function CCInputScreen({ navigation }) {
 
   const updateCard = async (cardId, updatedCardData) => {
     const updatedCardDetails = cardDetails.map((card) =>
-      card.id === cardId ? { ...card, ...updatedCardData } : card
+      card.id === cardId ? { ...card, ...updatedCardData } : card,
     );
     setCardDetails(updatedCardDetails);
     try {
@@ -176,7 +184,7 @@ export default function CCInputScreen({ navigation }) {
   const handleSave = async () => {
     if (cardNumber.length == 16 && nameOnCard && date && cvv && cardType) {
       const isCardExists = cardDetails.some(
-        (existingCard) => existingCard.cardNumber === cardNumber
+        (existingCard) => existingCard.cardNumber === cardNumber,
       );
       if (isCardExists) {
         alert("Card Number already exists! Try another Card");
@@ -241,19 +249,19 @@ export default function CCInputScreen({ navigation }) {
               if (storedCards) {
                 const cardsArray = JSON.parse(storedCards);
                 const cardIndex = cardsArray.findIndex(
-                  (card) => card.id === id
+                  (card) => card.id === id,
                 );
                 if (cardIndex !== -1) {
                   cardsArray.splice(cardIndex, 1);
                   await AsyncStorage.setItem(
                     "cards",
-                    JSON.stringify(cardsArray)
+                    JSON.stringify(cardsArray),
                   );
                   setCardDetails(cardsArray);
                   // alert("Card deleted successfully!");
                   ToastAndroid.show(
                     "Card deleted successfully!",
-                    ToastAndroid.SHORT
+                    ToastAndroid.SHORT,
                   );
                   navigation.navigate("Home", { cards: cardsArray });
                 } else {
@@ -268,7 +276,7 @@ export default function CCInputScreen({ navigation }) {
           },
         },
       ],
-      { cancelable: false }
+      { cancelable: false },
     );
   };
 
@@ -290,7 +298,7 @@ export default function CCInputScreen({ navigation }) {
         >
           <View style={styles.creditCard}>
             <CreditCard
-              id={cardId}
+              id={cardId || "new-card"}
               cardNumber={cardNumber}
               nameOnCard={nameOnCard}
               date={date}
@@ -391,13 +399,14 @@ export default function CCInputScreen({ navigation }) {
             <TextInput
               label={"Card Number"}
               mode="outlined"
+              autoComplete="cc-number"
               value={cardNumber}
               onChangeText={(text) => {
                 handleInputChange(text);
                 handleTextChange(text, 0);
               }}
               ref={(ref) => (inputRefs.current[0] = ref)}
-              keyboardType="numeric"
+              keyboardType="number-pad"
               placeholder="_ _ _ _    _ _ _ _    _ _ _ _    _ _ _ _"
               maxLength={inputConfigs[0].maxLength}
               right={<TextInput.Affix text={cardNumber.length + "/16"} />}
@@ -405,8 +414,9 @@ export default function CCInputScreen({ navigation }) {
           </View>
           <View style={styles.div}>
             <TextInput
-              label={"Name on Card"}
+              label={"Name on Cardssss"}
               mode="outlined"
+              autoComplete="cc-name"
               value={nameOnCard}
               onChangeText={(text) => {
                 setNameOnCard(text);
@@ -425,12 +435,13 @@ export default function CCInputScreen({ navigation }) {
             ]}
           >
             <TextInput
-              label={"Expiry Date"}
+              label={"Expiry Dates"}
               mode="outlined"
               style={[
                 styles.textInput,
                 { width: "47.5%", alignSelf: "center" },
               ]}
+              autoComplete="cc-exp"
               value={date}
               onChangeText={(text) => {
                 handleExpiryDate(text);
@@ -452,6 +463,7 @@ export default function CCInputScreen({ navigation }) {
                   alignSelf: "center",
                 },
               ]}
+              autoComplete="cc-csc"
               value={cvv}
               onChangeText={(text) => {
                 setCvv(text);

@@ -122,7 +122,7 @@ export default function Menu(props) {
           { backgroundColor: theme.colors.background },
         ]}
       >
-        <Drawer.Section title="">
+        <Drawer.Section title=" ">
           <View
             style={{
               flexDirection: "row",
@@ -134,7 +134,7 @@ export default function Menu(props) {
               autoPlay
               style={{
                 width: 60,
-                // height: 50,
+                height: 60,
                 backgroundColor: theme.colors.background,
                 transform: [{ translateY: -4 }],
               }}

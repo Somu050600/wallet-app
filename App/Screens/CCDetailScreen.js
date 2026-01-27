@@ -1,23 +1,22 @@
-import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRoute } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
-import { useTheme, IconButton, Button } from "react-native-paper";
+import LottieView from "lottie-react-native";
+import React, { useEffect, useState } from "react";
 import {
-  SafeAreaView,
+  Alert,
+  Image,
   StyleSheet,
   Text,
-  View,
-  Image,
-  Dimensions,
+  ToastAndroid,
   TouchableOpacity,
   useWindowDimensions,
-  Alert,
-  ToastAndroid,
+  View,
 } from "react-native";
-import { useRoute } from "@react-navigation/native";
-import { SharedElement } from "react-navigation-shared-element";
 import * as Animatable from "react-native-animatable";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import LottieView from "lottie-react-native";
+import { IconButton, useTheme } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { SharedElement } from "react-navigation-shared-element";
 import BackIcon from "../components/ExtraComponents/BackIcon";
 
 const formatCardNumber = (number) => {
@@ -87,19 +86,19 @@ export default function CCDetailScreen(props) {
               if (storedCards) {
                 const cardsArray = JSON.parse(storedCards);
                 const cardIndex = cardsArray.findIndex(
-                  (card) => card.id === id
+                  (card) => card.id === id,
                 );
                 if (cardIndex !== -1) {
                   cardsArray.splice(cardIndex, 1);
                   await AsyncStorage.setItem(
                     "cards",
-                    JSON.stringify(cardsArray)
+                    JSON.stringify(cardsArray),
                   );
                   // setCardDetails(cardsArray);
                   // alert("Card deleted successfully!");
                   ToastAndroid.show(
                     "Card deleted successfully!",
-                    ToastAndroid.SHORT
+                    ToastAndroid.SHORT,
                   );
                   props.navigation.navigate("Home", { cards: cardsArray });
                 } else {
@@ -114,7 +113,7 @@ export default function CCDetailScreen(props) {
           },
         },
       ],
-      { cancelable: false }
+      { cancelable: false },
     );
   };
 

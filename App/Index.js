@@ -1,16 +1,8 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  RefreshControl,
-  SafeAreaView,
-  ScrollView,
-  useWindowDimensions,
-} from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 import Header from "./components/Header";
 import Menu from "./components/Menu";
 import Navbar from "./components/Navbar";
-import React, { useState } from "react";
 
 export default function Index({ navigation }) {
   const [index, setIndex] = useState(0);

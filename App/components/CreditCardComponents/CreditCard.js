@@ -67,7 +67,7 @@ export default function CreditCard(props) {
   };
 
   return (
-    <SharedElement id={props.id} style={[StyleSheet.wrapper]}>
+    <SharedElement id={props.id || "new-card"} style={[StyleSheet.wrapper]}>
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={props.onPress}
@@ -184,14 +184,18 @@ export default function CreditCard(props) {
             )}
           </View>
         </View>
-        <Image source={cardTypeOptions[cardType]} style={styles.cardType} />
+        <Image
+          source={cardTypeOptions[cardType] ?? cardTypeOptions.VISA}
+          style={styles.cardType}
+        />
       </TouchableOpacity>
     </SharedElement>
   );
 }
 
 CreditCard.sharedElements = (route) => {
-  return [{ id: props.id }];
+  const id = route.params?.card?.id ?? "new-card";
+  return [{ id }];
 };
 
 const styles = StyleSheet.create({

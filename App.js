@@ -1,43 +1,49 @@
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
-import {
-  createStackNavigator,
-  TransitionPresets,
-} from "@react-navigation/stack";
-import { createSharedElementStackNavigator } from "react-navigation-shared-element";
-import {
-  AppRegistry,
-  useColorScheme,
-  View,
-  Image,
-  useWindowDimensions,
-  AppState,
-  Dimensions,
-  Button,
-} from "react-native";
-import { name as appName } from "./app.json";
-import {
-  PaperProvider,
-  MD3LightTheme,
-  MD3DarkTheme,
-  ActivityIndicator,
-  useTheme,
-} from "react-native-paper";
 import { useMaterial3Theme } from "@pchmn/expo-material3-theme";
-import LoginScreen from "./App/Screens/LoginScreen";
-import CCInputScreen from "./App/Screens/CCInputScreen";
-import CCDetailScreen from "./App/Screens/CCDetailScreen";
-import Index from "./App/Index";
-import ExploreScreen from "./App/Screens/ExploreScreen";
-import ScanScreen from "./App/Screens/ScanScreen";
-import SavedScreen from "./App/Screens/SavedScreen";
-import SettingsScreen from "./App/Screens/SettingsScreen";
-import { useState, useLayoutEffect, useEffect } from "react";
-import { Video, ResizeMode } from "expo-av";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NavigationContainer } from "@react-navigation/native";
+import { TransitionPresets } from "@react-navigation/stack";
+import { StatusBar } from "expo-status-bar";
+import { useVideoPlayer, VideoView } from "expo-video";
+import { useCallback, useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  AppRegistry,
+  Platform,
+  useColorScheme,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import { MD3DarkTheme, MD3LightTheme, PaperProvider } from "react-native-paper";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { createSharedElementStackNavigator } from "react-navigation-shared-element";
+import appConfig from "./app.json";
+import { ThemeContext } from "./App/ThemeContext";
+import Index from "./App/Index";
+import CCDetailScreen from "./App/Screens/CCDetailScreen";
+import CCInputScreen from "./App/Screens/CCInputScreen";
+import ExploreScreen from "./App/Screens/ExploreScreen";
+import LoginScreen from "./App/Screens/LoginScreen";
+import SavedScreen from "./App/Screens/SavedScreen";
+import ScanScreen from "./App/Screens/ScanScreen";
+import SettingsScreen from "./App/Screens/SettingsScreen";
 
 const Stack = createSharedElementStackNavigator();
+
+function LoadingVideo() {
+  const videoSource = require("./App/assets/Video/logo_flow_2.mp4");
+  const player = useVideoPlayer(videoSource, (p) => {
+    p.loop = false;
+    p.play();
+  });
+  return (
+    <VideoView
+      style={{ flex: 1 }}
+      player={player}
+      contentFit="cover"
+      nativeControls
+    />
+  );
+}
 
 export default function App(props) {
   const [themeColor, setThemeColor] = useState(null);
@@ -45,9 +51,8 @@ export default function App(props) {
   const colorScheme = useColorScheme();
   const { theme } = useMaterial3Theme();
 
-  const theme1 = useTheme();
-
   const { width, height } = useWindowDimensions();
+  const isWeb = Platform.OS === "web";
 
   const paperTheme =
     themeColor === "dark"
@@ -61,6 +66,11 @@ export default function App(props) {
         : setThemeColor(res);
     });
   };
+
+  const setThemePreference = useCallback(
+    (pref) => setThemeColor(pref === "System Default" ? colorScheme : pref),
+    [colorScheme]
+  );
 
   useEffect(() => {
     {
@@ -78,26 +88,35 @@ export default function App(props) {
   }, []);
 
   if (isLoading) {
+    const loadingBg = colorScheme === "dark" ? "#1a1a1a" : "#fff";
     return (
-      <View style={{ flex: 1, backgroundColor: theme1.colors.background }}>
-        <StatusBar style="auto" />
-        <Video
-          style={{ flex: 1 }}
-          source={require("./App/assets/Video/logo_flow_2.mp4")}
-          useNativeControls
-          shouldPlay
-          resizeMode={ResizeMode.COVER}
-          isLooping="false"
-        />
-      </View>
+      <PaperProvider theme={paperTheme}>
+        <View style={{ flex: 1, backgroundColor: loadingBg }}>
+          <StatusBar style="auto" />
+          {isWeb ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <ActivityIndicator size="large" />
+            </View>
+          ) : (
+            <LoadingVideo />
+          )}
+        </View>
+      </PaperProvider>
     );
   }
 
   return (
     <PaperProvider theme={paperTheme}>
-      <SafeAreaProvider style={{ flex: 1 }}>
-        <StatusBar style="auto" />
-        <NavigationContainer>
+      <ThemeContext.Provider value={{ setThemePreference }}>
+        <SafeAreaProvider style={{ flex: 1 }}>
+          <StatusBar style="auto" />
+          <NavigationContainer>
           <Stack.Navigator
             initialRouteName="Home"
             screenOptions={({ route, navigation }) => ({
@@ -126,7 +145,9 @@ export default function App(props) {
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaProvider>
+      </ThemeContext.Provider>
     </PaperProvider>
   );
 }
+const appName = appConfig.expo?.name ?? "main";
 AppRegistry.registerComponent(appName, () => App);

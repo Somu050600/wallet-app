@@ -1,17 +1,19 @@
-import React, { useState, useEffect, useLayoutEffect, useMemo } from "react";
-import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  RefreshControl,
-  SafeAreaView,
-  ScrollView,
-} from "react-native";
-import { useRoute } from "@react-navigation/native";
-import { useTheme } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRoute } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import {
+  Platform,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
+import { useTheme } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 import AddButton from "../components/AddButton";
-import Cards from "../components/CreditCardComponents/Cards";
 import Categories from "../components/CategoryComponents/Categories";
+import Cards from "../components/CreditCardComponents/Cards";
 import NothingFound from "../components/ExtraComponents/NothingFound";
 
 export default function HomeScreen(props) {
@@ -28,35 +30,33 @@ export default function HomeScreen(props) {
   const CardsMemoized = React.memo(Cards);
   const NothingFoundMemoized = React.memo(NothingFound);
 
-  const refreshControl = (
-    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-  );
-
-  const findCards = async () => {
+  const findCards = React.useCallback(async () => {
     const result = await AsyncStorage.getItem("cards");
     if (result !== null) {
       setNothing(false);
     }
-  };
-
-  useLayoutEffect(() => {
-    findCards();
-  }, [cards]);
-
-  useEffect(() => {
-    if (refreshFlag) {
-      // Fetch data or perform any actions needed
-      setRefreshFlag(false); // Reset the refresh flag
-    }
-  }, [refreshFlag]);
+  }, []);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     findCards();
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-  }, []);
+    setTimeout(() => setRefreshing(false), 2000);
+  }, [findCards]);
+
+  useLayoutEffect(() => {
+    findCards();
+  }, [cards, findCards]);
+
+  useEffect(() => {
+    if (refreshFlag) {
+      // Fetch data or any actions needed
+      setRefreshFlag(false);
+    }
+  }, [refreshFlag]);
+
+  const refreshControl = (
+    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+  );
 
   return (
     <SafeAreaView
@@ -64,7 +64,14 @@ export default function HomeScreen(props) {
     >
       <StatusBar style="auto" />
       {nothing ? (
-        <NothingFoundMemoized />
+        <View
+          style={[
+            styles.nothingWrap,
+            Platform.OS === "web" && styles.nothingWrapWeb,
+          ]}
+        >
+          <NothingFoundMemoized />
+        </View>
       ) : (
         <ScrollView refreshControl={refreshControl}>
           <CategoriesMemoized />
@@ -82,5 +89,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 90,
     minHeight: "100%",
+  },
+  nothingWrap: {
+    flex: 1,
+  },
+  nothingWrapWeb: {
+    flexShrink: 1,
+    maxHeight: "80vh",
   },
 });

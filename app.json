@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.somu0506.walletapp"
@@ -30,7 +28,7 @@
       "package": "com.somu0506.walletapp"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./App/assets/favicon.png"
     },
     "plugins": [
       [
@@ -38,7 +36,8 @@
         {
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
         }
-      ]
+      ],
+      "expo-video"
     ],
     "extra": {
       "eas": {
