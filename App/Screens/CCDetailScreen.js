@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import LottieView from "lottie-react-native";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -16,7 +16,6 @@ import {
 import * as Animatable from "react-native-animatable";
 import { IconButton, useTheme } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { SharedElement } from "react-navigation-shared-element";
 import BackIcon from "../components/ExtraComponents/BackIcon";
 
 const formatCardNumber = (number) => {
@@ -143,8 +142,7 @@ export default function CCDetailScreen(props) {
       >
         <BackIcon onPress={() => props.navigation.goBack()} />
       </View>
-      <SharedElement id={route.params?.card.id} style={[StyleSheet.wrapper]}>
-        <TouchableOpacity
+      <TouchableOpacity
           activeOpacity={0.7}
           onPress={props.onPress}
           style={[
@@ -290,13 +288,23 @@ export default function CCDetailScreen(props) {
           {/* </SharedElement> */}
           <Image source={cardTypeOptions[cardType]} style={styles.cardType} />
         </TouchableOpacity>
-      </SharedElement>
       <Animatable.View
         duration={500}
         delay={700}
         animation={"fadeIn"}
         style={[styles.buttons, {}]}
       >
+        <IconButton
+          icon="share-variant"
+          size={32}
+          style={{
+            backgroundColor: theme.colors.secondaryContainer,
+          }}
+          iconColor={theme.colors.onSecondaryContainer}
+          onPress={() =>
+            props.navigation.navigate("ShareCard", { card: route.params?.card })
+          }
+        />
         <IconButton
           icon="pencil"
           size={32}
@@ -342,10 +350,7 @@ export default function CCDetailScreen(props) {
   );
 }
 
-CCDetailScreen.sharedElements = (route) => {
-  const card = route.params.card;
-  return [{ id: card.id }];
-};
+
 
 const styles = StyleSheet.create({
   wrapper: {

@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from "react";
 import * as Clipboard from "expo-clipboard";
-import { useTheme, IconButton } from "react-native-paper";
+import { useEffect, useState } from "react";
 import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  Dimensions,
-  TouchableOpacity,
-  useWindowDimensions,
+    Image,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    useWindowDimensions,
+    View
 } from "react-native";
-import { SharedElement } from "react-navigation-shared-element";
+import { useTheme } from "react-native-paper";
 
 const formatCardNumber = (number) => {
   if (!number) {
@@ -68,7 +66,7 @@ export default function CardList(props) {
   };
 
   return (
-    <SharedElement id={props.card.id} style={[StyleSheet.wrapper]}>
+    <View style={[StyleSheet.wrapper]}>
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={props.onPress}
@@ -161,7 +159,7 @@ export default function CardList(props) {
 
         <Image source={cardTypeOptions[cardType]} fit style={styles.cardType} />
       </TouchableOpacity>
-    </SharedElement>
+    </View>
   );
 }
 

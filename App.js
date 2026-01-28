@@ -1,6 +1,7 @@
 import { useMaterial3Theme } from "@pchmn/expo-material3-theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TransitionPresets } from "@react-navigation/stack";
 import { StatusBar } from "expo-status-bar";
 import { useVideoPlayer, VideoView } from "expo-video";
@@ -15,9 +16,7 @@ import {
 } from "react-native";
 import { MD3DarkTheme, MD3LightTheme, PaperProvider } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import appConfig from "./app.json";
-import { ThemeContext } from "./App/ThemeContext";
 import Index from "./App/Index";
 import CCDetailScreen from "./App/Screens/CCDetailScreen";
 import CCInputScreen from "./App/Screens/CCInputScreen";
@@ -26,8 +25,10 @@ import LoginScreen from "./App/Screens/LoginScreen";
 import SavedScreen from "./App/Screens/SavedScreen";
 import ScanScreen from "./App/Screens/ScanScreen";
 import SettingsScreen from "./App/Screens/SettingsScreen";
+import ShareCardScreen from "./App/Screens/ShareCardScreen";
+import { ThemeContext } from "./App/ThemeContext";
 
-const Stack = createSharedElementStackNavigator();
+const Stack = createNativeStackNavigator();
 
 function LoadingVideo() {
   const videoSource = require("./App/assets/Video/logo_flow_2.mp4");
@@ -134,6 +135,7 @@ export default function App(props) {
             <Stack.Screen name="Saved" component={SavedScreen} />
             <Stack.Screen name="Settings" component={SettingsScreen} />
             <Stack.Screen name="CCScreen" component={CCDetailScreen} />
+            <Stack.Screen name="ShareCard" component={ShareCardScreen} />
             <Stack.Screen
               name="CCInput"
               component={CCInputScreen}

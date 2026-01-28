@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
 import * as Clipboard from "expo-clipboard";
-import { useTheme, IconButton } from "react-native-paper";
+import { useEffect, useState } from "react";
 import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  useWindowDimensions,
+    Image,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    useWindowDimensions,
+    View,
 } from "react-native";
-import { SharedElement } from "react-navigation-shared-element";
+import { IconButton, useTheme } from "react-native-paper";
 
 const formatCardNumber = (number) => {
   if (!number) {
@@ -67,7 +66,7 @@ export default function CreditCard(props) {
   };
 
   return (
-    <SharedElement id={props.id || "new-card"} style={[StyleSheet.wrapper]}>
+    <View style={[StyleSheet.wrapper]}>
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={props.onPress}
@@ -189,14 +188,11 @@ export default function CreditCard(props) {
           style={styles.cardType}
         />
       </TouchableOpacity>
-    </SharedElement>
+    </View>
   );
 }
 
-CreditCard.sharedElements = (route) => {
-  const id = route.params?.card?.id ?? "new-card";
-  return [{ id }];
-};
+
 
 const styles = StyleSheet.create({
   wrapper: {
