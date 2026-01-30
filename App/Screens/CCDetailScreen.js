@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import LottieView from "lottie-react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Image,
@@ -17,7 +17,9 @@ import * as Animatable from "react-native-animatable";
 import { IconButton, useTheme } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SharedElement } from "react-navigation-shared-element";
+import { CardPreview } from "../components/CreditCardComponents/CardPreview";
 import BackIcon from "../components/ExtraComponents/BackIcon";
+import { shareCard } from "../utils/shareCard";
 
 const formatCardNumber = (number) => {
   if (!number) {
@@ -36,6 +38,8 @@ export default function CCDetailScreen(props) {
   const [cvv, setCvv] = useState("");
   const [date, setDate] = useState("");
   const [viewCvv, setViewCvv] = useState("false");
+  const [sharing, setSharing] = useState(false);
+  const cardViewRef = useRef(null);
 
   const theme = useTheme();
   const dimensions = useWindowDimensions();
@@ -67,6 +71,30 @@ export default function CCDetailScreen(props) {
 
   const handleViewCvv = () => {
     setViewCvv(!viewCvv);
+  };
+
+  const sharePayload = route.params?.card
+    ? {
+        brand: route.params.card.cardType || "Card",
+        name: route.params.card.nameOnCard || "",
+        cardNumber: route.params.card.cardNumber || "",
+        last4: (route.params.card.cardNumber || "")
+          .replace(/\s/g, "")
+          .slice(-4),
+        expiry: route.params.card.date || "",
+      }
+    : null;
+
+  const handleShare = async () => {
+    if (!cardViewRef.current || !sharePayload) return;
+    setSharing(true);
+    try {
+      await shareCard({ ref: cardViewRef, card: sharePayload });
+    } catch (e) {
+      Alert.alert("Share failed", e?.message ?? "Could not share.");
+    } finally {
+      setSharing(false);
+    }
   };
 
   const handleDelete = async (id) => {
@@ -129,6 +157,17 @@ export default function CCDetailScreen(props) {
         backgroundColor: theme.colors.background,
       }}
     >
+      <View
+        ref={cardViewRef}
+        collapsable={false}
+        style={{
+          position: "absolute",
+          left: -5000,
+          top: 0,
+        }}
+      >
+        {sharePayload && <CardPreview card={sharePayload} />}
+      </View>
       <View
         style={{
           position: "absolute",
@@ -308,6 +347,14 @@ export default function CCDetailScreen(props) {
             props.navigation.navigate("CCInput", { card: route.params?.card })
           }
         />
+        <IconButton
+          icon="share-variant"
+          size={32}
+          style={{ backgroundColor: theme.colors.primary }}
+          iconColor={theme.colors.onPrimary}
+          onPress={handleShare}
+          disabled={sharing || !sharePayload}
+        />
         {/* <IconButton
           icon="delete"
           size={32}
@@ -331,8 +378,7 @@ export default function CCDetailScreen(props) {
             style={{
               width: 100,
               height: 100,
-              // backgroundColor: theme.colors.background,
-              transform: [{ translateX: -12.5 }, { translateY: -10 }],
+              transform: [{ translateX: -25 }, { translateY: -20 }],
             }}
             source={require("../assets/Lottie/delete_animation.json")}
           />
