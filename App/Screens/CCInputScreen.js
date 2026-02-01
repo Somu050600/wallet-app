@@ -5,7 +5,6 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   ToastAndroid,
@@ -16,7 +15,6 @@ import {
   List,
   Modal,
   Portal,
-  Text,
   TextInput,
   useTheme,
 } from "react-native-paper";
@@ -43,7 +41,7 @@ export default function CCInputScreen({ navigation }) {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const containerStyle = {
-    borderRadius: 20,
+    borderRadius: 4,
     width: "80%",
     padding: 20,
     alignSelf: "center",
@@ -133,7 +131,7 @@ export default function CCInputScreen({ navigation }) {
       await AsyncStorage.setItem("cards", JSON.stringify(updatedCardDetails));
       // console.log("Card details updated in AsyncStorage.");
       setTimeout(async () => {
-        await navigation.navigate("Home", { cards: updatedCardDetails });
+        await navigation.navigate("Main", { cards: updatedCardDetails });
       }, 500);
     } catch (error) {
       console.log("Error updating card details in AsyncStorage:", error);
@@ -205,7 +203,7 @@ export default function CCInputScreen({ navigation }) {
         // await console.log(cardDetails, "handelSave");
         // await AsyncStorage.clear();
         ToastAndroid.show("Card Saved!😎", ToastAndroid.SHORT);
-        await navigation.navigate("Home", { cards: updateCardDetails });
+        await navigation.navigate("Main", { cards: updateCardDetails });
       }
     } else if (cardNumber.length < 16) {
       alert("Please Enter 16 digits in Card Number");
@@ -263,7 +261,7 @@ export default function CCInputScreen({ navigation }) {
                     "Card deleted successfully!",
                     ToastAndroid.SHORT,
                   );
-                  navigation.navigate("Home", { cards: cardsArray });
+                  navigation.navigate("Main", { cards: cardsArray });
                 } else {
                   alert("Card not found with the specified ID.");
                 }
@@ -288,13 +286,16 @@ export default function CCInputScreen({ navigation }) {
         <BackIcon onPress={handleCancel} />
         {cardId ? <DeleteIcon onPress={() => handleDelete(cardId)} /> : ""}
       </View>
-      <ScrollView>
-        <KeyboardAvoidingView
-          width="100%"
-          alignItems="center"
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
+      >
+        <ScrollView
           style={styles.flex}
-          behavior={Platform.OS === "ios" ? "padding" : null}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} // Adjust the offset value as needed
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
           <View style={styles.creditCard}>
             <CreditCard
@@ -318,7 +319,7 @@ export default function CCInputScreen({ navigation }) {
                   },
                 ]}
               >
-                <ScrollView>
+                <ScrollView style={{ maxHeight: 250, overflowY: "auto" }}>
                   {isBank ? (
                     <List.Section title="Select a Bank Account">
                       {banks.map((bank) => {
@@ -476,25 +477,37 @@ export default function CCInputScreen({ navigation }) {
               maxLength={4}
             />
           </View>
-        </KeyboardAvoidingView>
-        <View style={styles.btn_container}>
-          <Pressable style={styles.button1} onPress={() => handleCancel()}>
-            <Text style={styles.btn_text}>Cancel</Text>
-          </Pressable>
-          {cardId ? (
-            <Pressable style={styles.button2} onPress={() => handleUpdate()}>
-              <Text style={styles.btn_text}>Update Card</Text>
-            </Pressable>
-          ) : (
-            <Pressable
-              style={styles.button2}
-              onPress={() => handleSave(cardId)}
+          <View style={styles.btn_container}>
+            <Button
+              mode="outlined"
+              onPress={handleCancel}
+              style={styles.btn_secondary}
             >
-              <Text style={styles.btn_text}>Save Card</Text>
-            </Pressable>
-          )}
-        </View>
-      </ScrollView>
+              Cancel
+            </Button>
+            {cardId ? (
+              <Button
+                mode="contained"
+                onPress={() => handleUpdate()}
+                style={styles.btn_primary}
+                disabled={
+                  !cardNumber || !nameOnCard || !date || !cvv || !cardType
+                }
+              >
+                Update Card
+              </Button>
+            ) : (
+              <Button
+                mode="contained"
+                onPress={() => handleSave(cardId)}
+                style={styles.btn_primary}
+              >
+                Save Card
+              </Button>
+            )}
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
       {/* {showMessage && (
         <BottomMessage message={"Card Updated!😎"} style={styles.bottom_msg} />
       )} */}
@@ -504,45 +517,22 @@ export default function CCInputScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   btn_container: {
-    alignSelf: "center",
-    marginTop: 30,
-    width: "80%",
-    flexDirection: "column-reverse",
-    justifyContent: "space-between",
-    paddingBottom: 30,
-    // borderColor: "black",
-    // borderWidth: 0.5,
+    marginTop: "auto",
+    marginHorizontal: "5%",
+    gap: 12,
+    flexDirection: "row",
   },
-  button1: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 15,
-    // paddingHorizontal: 32,
-    marginTop: 10,
-    borderRadius: 25,
-    elevation: 13,
-    backgroundColor: "black",
+  btn_primary: {
+    flex: 1,
+    borderRadius: 4,
   },
-  button2: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 15,
-    // paddingHorizontal: 32,
-    borderRadius: 25,
-    elevation: 13,
-    backgroundColor: "#2196F3",
-  },
-  btn_text: {
-    fontSize: 20,
-    lineHeight: 21,
-    fontWeight: "bold",
-    letterSpacing: 0.25,
-    color: "white",
+  btn_secondary: {
+    flex: 1,
+    borderRadius: 4,
   },
   container: {
     flex: 1,
     backgroundColor: "#FFF",
-    paddingTop: 50,
   },
   bottom_msg: {
     alignItems: "center",
@@ -550,6 +540,7 @@ const styles = StyleSheet.create({
     zIndex: 100,
   },
   creditCard: {
+    marginHorizontal: "auto",
     marginBottom: 25,
   },
   containerHeader: {
@@ -562,30 +553,13 @@ const styles = StyleSheet.create({
   div: {
     width: "80%",
     paddingVertical: 10,
+    marginHorizontal: "auto",
   },
   flex: {
     flex: 1,
-    paddingTop: 10,
   },
-  input_title: {
-    fontSize: 12,
-    fontWeight: 700,
-    color: "gray",
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 40,
   },
-  saveBtn: {
-    width: 100,
-    backgroundColor: "#000",
-  },
-  scrollView: {
-    position: "absolute",
-  },
-  // textInput: {
-  //   width: "100%",
-  //   // borderWidth: 1,
-  //   borderColor: "#115599",
-  //   padding: 10,
-  //   borderRadius: 5,
-  //   marginTop: 5,
-  //   fontSize: 20,
-  // },
 });

@@ -1,7 +1,4 @@
-import {
-  CameraView,
-  useCameraPermissions,
-} from "expo-camera";
+import { CameraView, useCameraPermissions } from "expo-camera";
 import LottieView from "lottie-react-native";
 import React, { useState } from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -24,7 +21,12 @@ export default function ScanScreen() {
 
   if (!permission.granted) {
     return (
-      <View style={styles.animationContainer}>
+      <View
+        style={[
+          styles.animationContainer,
+          { backgroundColor: theme.colors.background },
+        ]}
+      >
         <LottieView
           autoPlay
           style={{

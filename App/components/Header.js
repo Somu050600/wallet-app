@@ -1,5 +1,5 @@
 import * as Font from "expo-font";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   Animated,
   StyleSheet,
@@ -8,7 +8,11 @@ import {
   View,
 } from "react-native";
 import { IconButton, Searchbar, useTheme } from "react-native-paper";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import { SearchContext } from "../SearchContext";
 
 const customFonts = {
   "Inter-Black": require("./../assets/Fonts/Borel-Regular.ttf"),
@@ -17,7 +21,7 @@ const customFonts = {
 export default function Header(props) {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const { searchQuery, setSearchQuery } = useContext(SearchContext);
 
   const dimensions = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -106,6 +110,8 @@ export default function Header(props) {
                 color: theme.colors.onBackground,
                 padding: 0,
                 margin: 0,
+                includeFontPadding: false,
+                transform: [{ translateY: 8 }],
               }}
             >
               ÒNEWallet
@@ -115,10 +121,12 @@ export default function Header(props) {
               style={{
                 fontSize: 24,
                 fontWeight: "bold",
+                lineHeight: 24,
                 letterSpacing: 2,
                 color: theme.colors.background,
                 padding: 0,
                 margin: 0,
+                includeFontPadding: false,
               }}
             >
               ÒNEWallet
@@ -173,8 +181,14 @@ export default function Header(props) {
           value={searchQuery}
           style={styles.searchbar}
           traileringIcon="close"
-          onTraileringIconPress={() => setIsSearch(!isSearch)}
-          onClearIconPress={() => setIsSearch(!isSearch)}
+          onTraileringIconPress={() => {
+            setSearchQuery("");
+            setIsSearch(!isSearch);
+          }}
+          onClearIconPress={() => {
+            setSearchQuery("");
+            setIsSearch(!isSearch);
+          }}
         />
       </Animated.View>
     </SafeAreaView>

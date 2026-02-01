@@ -1,7 +1,7 @@
 import { useMaterial3Theme } from "@pchmn/expo-material3-theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
-import { TransitionPresets } from "@react-navigation/stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import { useVideoPlayer, VideoView } from "expo-video";
 import { useCallback, useEffect, useState } from "react";
@@ -15,19 +15,14 @@ import {
 } from "react-native";
 import { MD3DarkTheme, MD3LightTheme, PaperProvider } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import appConfig from "./app.json";
-import { ThemeContext } from "./App/ThemeContext";
 import Index from "./App/Index";
-import CCDetailScreen from "./App/Screens/CCDetailScreen";
 import CCInputScreen from "./App/Screens/CCInputScreen";
-import ExploreScreen from "./App/Screens/ExploreScreen";
+import HomeCardDetailScreen from "./App/Screens/HomeCardDetailScreen";
 import LoginScreen from "./App/Screens/LoginScreen";
-import SavedScreen from "./App/Screens/SavedScreen";
-import ScanScreen from "./App/Screens/ScanScreen";
-import SettingsScreen from "./App/Screens/SettingsScreen";
+import { ThemeContext } from "./App/ThemeContext";
 
-const Stack = createSharedElementStackNavigator();
+const Stack = createNativeStackNavigator();
 
 function LoadingVideo() {
   const videoSource = require("./App/assets/Video/logo_flow_2.mp4");
@@ -40,7 +35,7 @@ function LoadingVideo() {
       style={{ flex: 1 }}
       player={player}
       contentFit="cover"
-      nativeControls
+      nativeControls={false}
     />
   );
 }
@@ -69,7 +64,7 @@ export default function App(props) {
 
   const setThemePreference = useCallback(
     (pref) => setThemeColor(pref === "System Default" ? colorScheme : pref),
-    [colorScheme]
+    [colorScheme],
   );
 
   useEffect(() => {
@@ -117,34 +112,30 @@ export default function App(props) {
         <SafeAreaProvider style={{ flex: 1 }}>
           <StatusBar style="auto" />
           <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="Home"
-            screenOptions={({ route, navigation }) => ({
-              headerShown: false,
-              gestureEnabled: true,
-              cardOverlayEnabled: true,
-              // headerStatusBarHeight: 5000,
-              // ...TransitionPresets.ModalTransition,
-            })}
-          >
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Home" component={Index} />
-            <Stack.Screen name="Explore" component={ExploreScreen} />
-            <Stack.Screen name="Scan" component={ScanScreen} />
-            <Stack.Screen name="Saved" component={SavedScreen} />
-            <Stack.Screen name="Settings" component={SettingsScreen} />
-            <Stack.Screen name="CCScreen" component={CCDetailScreen} />
-            <Stack.Screen
-              name="CCInput"
-              component={CCInputScreen}
-              options={{
-                title: "CCInput",
-                ...TransitionPresets.RevealFromBottomAndroid,
+            <Stack.Navigator
+              initialRouteName="Main"
+              screenOptions={{
+                headerShown: false,
+                gestureEnabled: true,
               }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </SafeAreaProvider>
+            >
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="Main" component={Index} />
+              <Stack.Screen
+                name="HomeCardDetail"
+                component={HomeCardDetailScreen}
+                options={{ animation: "none" }}
+              />
+              <Stack.Screen
+                name="CCInput"
+                component={CCInputScreen}
+                options={{
+                  animation: "slide_from_bottom",
+                }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </SafeAreaProvider>
       </ThemeContext.Provider>
     </PaperProvider>
   );

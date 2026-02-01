@@ -1,16 +1,9 @@
-import React, { useContext, useState, useEffect } from "react";
-import { StyleSheet, View, Text } from "react-native";
-import LottieView from "lottie-react-native";
-import {
-  List,
-  Modal,
-  Portal,
-  Switch,
-  useTheme,
-  Button,
-} from "react-native-paper";
-import { ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import LottieView from "lottie-react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Button, List, Modal, Portal, useTheme } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemeContext } from "../ThemeContext";
 
 export default function SettingsScreen(props) {
@@ -40,17 +33,25 @@ export default function SettingsScreen(props) {
     findTheme();
   }, []);
   return (
-    <View style={styles.animationContainer}>
+    <SafeAreaView
+      style={[
+        styles.animationContainer,
+        { backgroundColor: theme.colors.background },
+      ]}
+      edges={["top", "left", "right"]}
+    >
       <View
         style={{
-          borderWidth: 0.5,
+          borderColor: theme.colors.onPrimaryContainer,
           width: "100%",
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
           paddingHorizontal: 20,
           paddingVertical: 10,
-          backgroundColor: theme.colors.onPrimary,
+          paddingTop: 30,
+          borderBottomWidth: 1,
+          backgroundColor: theme.colors.background,
         }}
       >
         <Text
@@ -127,20 +128,21 @@ export default function SettingsScreen(props) {
       <LottieView
         autoPlay
         style={{
-          width: 280,
-          height: 280,
+          marginVertical: "auto",
+          width: 320,
+          height: 320,
           backgroundColor: theme.colors.background,
         }}
         source={require("../assets/Lottie/thanking_idea.json")}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   animationContainer: {
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "center",
     flex: 1,
     width: "100%",
     paddingTop: 40,

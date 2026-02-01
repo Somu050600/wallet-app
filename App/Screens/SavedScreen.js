@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
-import { Button, StyleSheet, View, Text, useWindowDimensions } from "react-native";
 import LottieView from "lottie-react-native";
+import React from "react";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { useTheme } from "react-native-paper";
 
 export default function SavedScreen(props) {
@@ -9,7 +9,12 @@ export default function SavedScreen(props) {
   const size = Math.min(width, 320);
 
   return (
-    <View style={styles.animationContainer}>
+    <View
+      style={[
+        styles.animationContainer,
+        { backgroundColor: theme.colors.background },
+      ]}
+    >
       <LottieView
         autoPlay
         style={{

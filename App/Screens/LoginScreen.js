@@ -1,28 +1,24 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState("");
 
   const onLogin = () => {
-    navigation.navigate("Home", { username: username });
+    navigation.navigate("Main", { username: username });
   };
 
   return (
     <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        padding: 20,
-        backgroundColor: "#121212",
-      }}
+      style={[
+        {
+          flex: 1,
+          justifyContent: "center",
+          padding: 20,
+          backgroundColor: theme.colors.background,
+        },
+      ]}
     >
       <View
         style={{

@@ -1,17 +1,16 @@
-import React, { useEffect, useState, useLayoutEffect, useRef } from "react";
+import * as Font from "expo-font";
+import LottieView from "lottie-react-native";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
-  Text,
-  View,
-  StyleSheet,
-  Dimensions,
   Animated,
-  useWindowDimensions,
-  TouchableOpacity,
   PanResponder,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
 } from "react-native";
 import { Drawer, useTheme } from "react-native-paper";
-import LottieView from "lottie-react-native";
-import * as Font from "expo-font";
 
 const customFonts = {
   "Inter-Black": require("./../assets/Fonts/Borel-Regular.ttf"),
@@ -82,7 +81,7 @@ export default function Menu(props) {
           openMenu();
         }
       },
-    })
+    }),
   ).current;
 
   return (
@@ -91,7 +90,7 @@ export default function Menu(props) {
       style={[
         styles.Container,
         {
-          height: dimensions.height + 40,
+          height: dimensions.height,
           transform: [{ translateX: offsetValue }],
           elevation: offsetValue.interpolate({
             inputRange: [0, 1],
@@ -149,6 +148,7 @@ export default function Menu(props) {
                   color: theme.colors.onBackground,
                   padding: 0,
                   margin: 0,
+                  transform: [{ translateY: 8 }],
                 }}
               >
                 ÒNEWallet
@@ -162,6 +162,7 @@ export default function Menu(props) {
                   color: theme.colors.onBackground,
                   padding: 0,
                   margin: 0,
+                  transform: [{ translateY: 8 }],
                 }}
               >
                 ÒNEWallet
@@ -173,7 +174,7 @@ export default function Menu(props) {
             label="Home"
             active={active === "first"}
             onPress={() => {
-              setActive("first"), props.onPress(), props.setIndex(0);
+              (setActive("first"), props.onPress(), props.setIndex(0));
             }}
           />
           <Drawer.Item
@@ -181,7 +182,7 @@ export default function Menu(props) {
             label="Credit Cards"
             active={active === "second"}
             onPress={() => {
-              setActive("second"), props.onPress();
+              (setActive("second"), props.onPress());
             }}
           />
           <Drawer.Item
@@ -189,7 +190,7 @@ export default function Menu(props) {
             label="Id Cards"
             active={active === "third"}
             onPress={() => {
-              setActive("third"), props.onPress();
+              (setActive("third"), props.onPress());
             }}
           />
           <Drawer.Item
@@ -197,7 +198,7 @@ export default function Menu(props) {
             label="Explore"
             active={active === "fourth"}
             onPress={() => {
-              setActive("fourth"), props.onPress(), props.setIndex(1);
+              (setActive("fourth"), props.onPress(), props.setIndex(1));
             }}
           />
           <Drawer.Item
@@ -206,7 +207,7 @@ export default function Menu(props) {
             active={active === "fifth"}
             onPress={() => {
               {
-                setActive("fifth"), props.onPress(), props.setIndex(3);
+                (setActive("fifth"), props.onPress(), props.setIndex(3));
               }
             }}
           />
@@ -215,7 +216,7 @@ export default function Menu(props) {
             label="Settings"
             active={active === "sixth"}
             onPress={() => {
-              setActive("sixth"), props.onPress(), props.setIndex(4);
+              (setActive("sixth"), props.onPress(), props.setIndex(4));
             }}
           />
         </Drawer.Section>
@@ -239,7 +240,6 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     position: "absolute",
-    paddingTop: 50,
     width: "100%",
     height: "100%",
     borderRadius: 30,

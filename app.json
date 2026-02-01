@@ -1,5 +1,6 @@
 {
   "expo": {
+    "newArchEnabled": true,
     "name": "wallet-app",
     "slug": "wallet-app",
     "version": "1.0.0",
@@ -31,14 +32,20 @@
       "favicon": "./App/assets/favicon.png"
     },
     "plugins": [
-      "./plugins/withAndroidBuildGradle",
+      "./plugins/withKotlinJvmTarget",
       [
         "expo-camera",
         {
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
         }
       ],
-      "expo-video"
+      "expo-video",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to use Face ID to share cards securely."
+        }
+      ]
     ],
     "extra": {
       "eas": {
