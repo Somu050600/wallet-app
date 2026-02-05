@@ -154,9 +154,7 @@ export default function HomeCardList({ navigation, cards }) {
                         icon="content-copy"
                         size={20}
                         iconColor={cardFg}
-                        onPress={() =>
-                          copyMaskedNumber(formatMaskedNumber(card?.cardNumber))
-                        }
+                        onPress={() => copyMaskedNumber(card?.cardNumber)}
                         style={styles.copyBtn}
                       />
                     </View>
